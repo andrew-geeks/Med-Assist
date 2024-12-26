@@ -12,11 +12,7 @@ function Login(){
                 <h3>Login</h3>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Enter Email address</Form.Label>
-                    <Form.Control  type="email"  placeholder="Your e-mail" />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                    <Form.Label>Enter Email address</Form.Label>
-                    <Form.Control  type="email"  placeholder="Your e-mail" />
+                    <Form.Control  type="email"  placeholder="Your E-mail" />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Enter Password</Form.Label>
