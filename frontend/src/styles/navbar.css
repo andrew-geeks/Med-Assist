@@ -5,3 +5,9 @@
 .navbar-content{
     padding-right: 2px !important;
 }
+
+.brandname{
+    font-size: 120%;
+    padding-top: 10%;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}

@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import navlogo from '../media/main.png'
 
 
 
@@ -14,8 +15,8 @@ function NavBar(){
         <Navbar expand="lg" className="bg-body-tertiary">
         <Container className=''>
           <Navbar.Brand href="#home">
-            <img alt="" src="/img/logo.svg" width="30" height="30" className="d-inline-block align-top"/>{' '}
-            MedAssist
+            <img alt="" src={navlogo} width="40" height="40" className="d-inline-block align-top"/>{' '}
+            <span className="brandname">MedAssist</span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
