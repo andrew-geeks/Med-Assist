@@ -27,8 +27,8 @@ function NavBar(){
               <Nav.Link href="#link">Book Appointment</Nav.Link>
 
               <NavDropdown title="More" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#login">LogIn</NavDropdown.Item>
-                <NavDropdown.Item href="#signup">SignUp</NavDropdown.Item>
+                <NavDropdown.Item href="/login">LogIn</NavDropdown.Item>
+                <NavDropdown.Item href="/signup">SignUp</NavDropdown.Item>
                 <NavDropdown.Item href="#doctors">For Doctors</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.4">
