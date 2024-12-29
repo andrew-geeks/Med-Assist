@@ -45,6 +45,7 @@ function Signup(){
         //submission
         else{
             formData.cpassword=""
+            formData.type="patient"
             const response = await fetch("http://127.0.0.1:4000/signup", {
                 method: "POST",
                 headers: {
@@ -55,9 +56,10 @@ function Signup(){
             if (!response.ok) {
                 setErr("Error at backend")
             }
-            //for reading return messages
-            const data = await response.json()
-            console.log(data.data)
+            else{
+                console.log("go to dashboard")
+                window.location.href = '/dashboard'
+            }
 
         }
         
