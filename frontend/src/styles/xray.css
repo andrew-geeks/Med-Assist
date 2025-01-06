@@ -1,0 +1,12 @@
+.d1{
+    text-align: center;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    background-color: bisque;
+}
+
+.d1 .file{
+    padding-left: 20%;
+    padding-right: 20%;
+    text-align: center;
+}
