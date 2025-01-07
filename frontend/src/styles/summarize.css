@@ -1,0 +1,12 @@
+.c1{
+    padding-top: 5%;
+    text-align: center;
+    padding-bottom: 5%;
+    background-color: bisque;
+}
+
+.c1 .file{
+    padding-left: 20%;
+    padding-right: 20%;
+    text-align: center;
+}

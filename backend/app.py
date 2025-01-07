@@ -6,16 +6,16 @@ import json
 import pickle
  
 # --- LLM IMPORTS --- 
-from langchain_community.chat_models import ChatOllama
-from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
 from langchain_core.prompts import ChatPromptTemplate
-
-from langchain_chroma import Chroma
-import chromadb
-from chromadb.utils import embedding_functions
-from sentence_transformers import SentenceTransformer
 from langchain_huggingface import HuggingFaceEmbeddings
+
+from langchain_ollama import ChatOllama
+from langchain_community.docstore.in_memory import InMemoryDocstore
+
+import faiss
+from langchain_community.vectorstores import FAISS
 # --- --- ---
 
 
@@ -26,25 +26,31 @@ salt = bcrypt.gensalt()
 DB  = MongoDatabase()
 mdb = DB.db #database variable
 
-client = chromadb.PersistentClient(path='../../chroma_db')
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-chroma_db = Chroma(client=client, collection_name="langchain",embedding_function=embeddings) 
-model_local = ChatOllama(model="llama3.2")
-after_rag_template = """You are a Medical Chatbot called MedBot, answering questions strictly related to chest diseases. Do not provide any consultation. Give answers only for medical queries. Answer the question based only on the following context:
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+vector_store = FAISS.load_local("../../med_db", embeddings=embeddings, allow_dangerous_deserialization=True)
+# num_predict=100 - parameter to set tokens
+retriever = vector_store.as_retriever(search_type="mmr", search_kwargs = {'k': 2, 'fetch_k': 100,'lambda_mult': 1})
+model = ChatOllama(model="llama3.2" ,base_url="http://localhost:11434")
+
+prompt = """You are a Medical Chatbot answering questions strictly related to chest diseases. 
+Do not provide any consultation. Give answers only for medical queries. Answer the question based only on the following context:
 {context}
 Question: {question}
 """
+prompt = ChatPromptTemplate.from_template(prompt)
+
+def format_docs(docs):
+    return "\n\n".join([doc.page_content for doc in docs])
 
 def powerLLM(question):
-    retriever = chroma_db.as_retriever()
-    after_rag_prompt = ChatPromptTemplate.from_template(after_rag_template)
-    after_rag_chain = (
-        {"context": retriever, "question": RunnablePassthrough()}
-        | after_rag_prompt
-        | model_local
+    rag_chain = (
+        {"context": retriever|format_docs, "question": RunnablePassthrough()}
+        | prompt
+        | model
         | StrOutputParser()
     )
-    return after_rag_chain.invoke(question+" in 35 words")
+    
+    return rag_chain.invoke(question+" in 35 words")
     
     
     

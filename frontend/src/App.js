@@ -8,7 +8,7 @@ import Dashboard from './components/dashboard';
 import DSignup from './components/dsignup';
 import Chat from './components/chat';
 import Xray from './components/xray';
-
+import Summarize from './components/summarize';
 
 
 //base code
@@ -24,6 +24,7 @@ function App() {
               <Route path='/dashboard' element={<Dashboard/>}/>
               <Route path="/chat" element={<Chat/>}/>
               <Route path="/xray" element={<Xray/>}/>
+              <Route path="/summarize" element={<Summarize/>}/>
           </Routes>
         </Router>
     </div>
