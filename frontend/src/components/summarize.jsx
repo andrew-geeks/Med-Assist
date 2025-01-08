@@ -58,6 +58,12 @@ function Summarize(){
                     <Form.Label>Upload report in .pdf format</Form.Label>
                     <Form.Control type="file" accept="application/pdf" onChange={extractText} required/>
                     <br/>
+                    {/* <br/>
+                    <Form.Label>select word count</Form.Label><br/>
+                    <Form.Check inline label="70 words" name="group1" type="radio"/>
+                    <Form.Check inline label="100 words" name="group1" type="radio"/>
+                    <Form.Check inline label="120 words" name="group1" type="radio"/>
+                    <br/> */}
                     <Button variant="warning" onClick={getSummary}>Summarize📄</Button>
                  </Form.Group>
                  <br/>
