@@ -12,7 +12,7 @@ import navlogo from '../media/main.png'
 function NavBar(){
     return(
         <div className=''>
-        <Navbar expand="lg" className="bg-body-tertiary">
+        <Navbar expand="lg" className="bg-body-tertiary navbar">
         <Container className=''>
           <Navbar.Brand href="#home">
             <img alt="" src={navlogo} width="40" height="40" className="d-inline-block align-top"/>{' '}

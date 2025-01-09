@@ -1,0 +1,71 @@
+.p1{
+    background-color: black;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    padding-left: 10%;
+    padding-right: 10%;
+    display: flex;
+}
+
+.p1 .text{
+    color: white;
+    text-align: center;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 5%;
+}
+
+.p1 .text h3{
+    font-size: 50px;
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,116,121,1) 50%, rgba(0,212,255,1) 100%);
+}
+
+.chest{
+    width: 40%;
+    border: solid 7px white;
+    border-radius: 11%;
+}
+
+.p2{
+    background: rgb(11,7,83);
+    background: linear-gradient(90deg, rgba(11,7,83,1) 32%, rgba(9,116,121,1) 78%, rgba(0,212,255,1) 100%);
+    padding-top: 5%;
+    padding-bottom: 5%;
+    color: white;
+}
+
+.p2 .typed{
+    font-size: 50px; 
+    font-weight: bold;
+    text-align: center;
+    margin: 2rem; 
+}
+
+.p3{
+    padding-top: 5%;
+    padding-bottom: 5%;
+    color: white;
+    background-color: black;
+}
+
+.feature-container {
+    display: flex;
+    justify-content: space-around; /* Adjust spacing as needed */
+    align-items: center; /* Align items vertically */
+    padding: 10px;
+  }
+  
+  .feature-container .box {
+    text-align: center;
+    width: 25%;
+    height: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+  }
+
+  .feature-container .box p{
+    padding-left: 5%;
+  }
