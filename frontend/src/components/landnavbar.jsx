@@ -22,7 +22,9 @@ function LandingNavBar(){
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="container-fluid">
               <Nav.Item className='ms-auto'>
-              <button className="get-started-button">Get Started</button>
+              <form action="/signup">
+              <button type="submit" className="get-started-button">Get Started</button>
+              </form>
               </Nav.Item>
               <NavDropdown title="More" id="basic-nav-dropdown">
                 <NavDropdown.Item href="/login">LogIn</NavDropdown.Item>

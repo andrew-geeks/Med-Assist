@@ -15,3 +15,20 @@
     padding-left: 5%;
     padding-right: 5%;
 }
+
+.custom-file-upload {
+    background-color: #f8f9fa; /* Light gray background */
+    color: #495057; /* Text color */
+    border: 2px dashed #6c757d; /* Dashed border */
+    padding: 10px 15px; /* Padding */
+    border-radius: 5px; /* Rounded corners */
+    text-align: center; /* Center the text */
+    font-size: 14px; /* Font size */
+    cursor: pointer; /* Pointer cursor for hover effect */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+  }
+  
+  .custom-file-upload:hover {
+    background-color: #e2e6ea; /* Lighter gray on hover */
+    color: #343a40; /* Darker text on hover */
+  }

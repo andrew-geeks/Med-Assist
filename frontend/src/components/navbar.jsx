@@ -14,7 +14,7 @@ function NavBar(){
         <div className=''>
         <Navbar expand="lg" className="bg-body-tertiary navbar">
         <Container className=''>
-          <Navbar.Brand href="#home">
+          <Navbar.Brand href="/">
             <img alt="" src={navlogo} width="40" height="40" className="d-inline-block align-top"/>{' '}
             <span className="brandname">MedAssist</span>
           </Navbar.Brand>

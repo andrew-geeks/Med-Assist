@@ -56,14 +56,9 @@ function Summarize(){
                 <h3>Upload any medical reports here to summarize..</h3>
                 <Form.Group controlId="formFile" className="mb-3 file" onSubmit={getSummary}>
                     <Form.Label>Upload report in .pdf format</Form.Label>
-                    <Form.Control type="file" accept="application/pdf" onChange={extractText} required/>
+                    <Form.Control type="file" accept="application/pdf" className="custom-file-upload " onChange={extractText} required/>
                     <br/>
-                    {/* <br/>
-                    <Form.Label>select word count</Form.Label><br/>
-                    <Form.Check inline label="70 words" name="group1" type="radio"/>
-                    <Form.Check inline label="100 words" name="group1" type="radio"/>
-                    <Form.Check inline label="120 words" name="group1" type="radio"/>
-                    <br/> */}
+                   
                     <Button variant="warning" onClick={getSummary}>Summarize📄</Button>
                  </Form.Group>
                  <br/>
