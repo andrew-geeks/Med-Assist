@@ -1,6 +1,6 @@
 import {useState} from 'react';
-import '../styles/auth.css';
-import logo from '../media/main.png'
+import '../../styles/auth.css';
+import logo from '../../media/main.png'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';

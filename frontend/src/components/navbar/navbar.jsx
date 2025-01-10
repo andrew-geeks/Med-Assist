@@ -1,15 +1,25 @@
-import '../styles/navbar.css';
+import '../../styles/navbar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Cookies from 'js-cookie';
+
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import navlogo from '../media/main.png'
+import navlogo from '../../media/main.png'
 
 
 
 
 function NavBar(){
+
+    const LogOut = () =>{
+      Cookies.remove("name");
+      Cookies.remove("email");
+      Cookies.remove("type");
+      window.location.href = '/'
+    }
+
     return(
         <div className=''>
         <Navbar expand="lg" className="bg-body-tertiary navbar">
@@ -29,6 +39,7 @@ function NavBar(){
               <NavDropdown title="More" id="basic-nav-dropdown">
                 <NavDropdown.Item href="/login">LogIn</NavDropdown.Item>
                 <NavDropdown.Item href="/signup">SignUp</NavDropdown.Item>
+                <NavDropdown.Item onClick={LogOut}>Logout</NavDropdown.Item>
                 <NavDropdown.Item href="#doctors">For Doctors</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.4">

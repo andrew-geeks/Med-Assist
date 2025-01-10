@@ -1,3 +1,4 @@
 
 *.bin
 /model/chroma_db
+/.env

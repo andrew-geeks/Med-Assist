@@ -1,6 +1,9 @@
 import {useState} from 'react';
-import '../styles/auth.css';
-import logo from '../media/main.png'
+import Cookies from 'js-cookie';
+import axios from 'axios';
+
+import '../../styles/auth.css';
+import logo from '../../media/main.png'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
@@ -11,6 +14,7 @@ import Row from 'react-bootstrap/Row';
 function Signup(){
     const [formData,setFormData] = useState({});
     const [err,setErr] = useState("");
+
 
 
     const handleChange=(e)=>{
@@ -46,25 +50,20 @@ function Signup(){
         else{
             formData.cpassword=""
             formData.type="patient"
-            const response = await fetch("http://127.0.0.1:4000/signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            if (!response.ok) {
-                setErr("Error at backend")
-            }
-            else{
-                console.log("go to dashboard")
-                window.location.href = '/dashboard'
-            }
-
+            await axios.post("http://127.0.0.1:4000/signup",formData)
+                .then((response)=>{
+                    //success -- all cookies are set for 2 days
+                    console.log(response.data)
+                    Cookies.set('email',response.data.email,{ expires: 2 })
+                    Cookies.set('name',response.data.name, { expires: 2 })
+                    Cookies.set('type',response.data.type, { expires: 2 })
+                    //redirecting
+                    window.location.href = '/dashboard'
+                },(error)=>{
+                    console.log(error.response.data.message)
+                    setErr(error.response.data.message)
+                })
         }
-        
-        
-
 
     };
 
@@ -110,6 +109,7 @@ function Signup(){
                 <Form.Label>Re-enter Password</Form.Label>
                 <Form.Control  type="password" placeholder="Your password" name="cpassword"  onChange={handleChange} value={formData.cpassword} required/>
             </Form.Group>
+            <a href="/login">Have account? Sign In</a><br/>
             <Button variant="warning" type="submit" >SignUp</Button>
             
             {
@@ -124,6 +124,7 @@ function Signup(){
                 )
             }
         </Form>
+
     </div>
     )
 }

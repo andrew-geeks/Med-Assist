@@ -1,4 +1,4 @@
-import LandingNavBar from './landnavbar';
+import LandingNavBar from './navbar/landnavbar';
 import '../styles/common.css';
 //import Button from 'react-bootstrap/Button';
 import Chest from '../media/chest.jpg';

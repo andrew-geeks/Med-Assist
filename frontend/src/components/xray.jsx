@@ -2,7 +2,7 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 // import Chat from './chat';
-import NavBar from './navbar';
+import NavBar from './navbar/navbar';
 import '../styles/xray.css';
 
 function Xray(){

@@ -1,6 +1,8 @@
-import '../styles/auth.css';
+import '../../styles/auth.css';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 import {useState} from 'react';
-import logo from '../media/main.png'
+import logo from '../../media/main.png'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
@@ -19,20 +21,34 @@ function Login(){
 
     const submit = async (e)=>{
         e.preventDefault()
-        const response = await fetch("http://127.0.0.1:4000/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-        });
-        if (!response.ok) {
-            setErr("Incorrect Email or Password!")
-        }
-        else{
-            window.location.href = '/dashboard'
-            console.log("go to dashboard")
-        }
+        await axios.post("http://127.0.0.1:4000/login",formData)
+            .then((response)=>{
+ 
+                //adding cookies
+                Cookies.set('email',response.data.email,{ expires: 2 })
+                Cookies.set('name',response.data.name, { expires: 2 })
+                Cookies.set('type',response.data.type, { expires: 2 })
+                //redirecting
+                window.location.href = '/dashboard'
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+
+        // const response = await fetch("http://127.0.0.1:4000/login", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(formData),
+        // });
+        // if (!response.ok) {
+        //     setErr("Incorrect Email or Password!")
+        // }
+        // else{
+        //     window.location.href = '/dashboard'
+        //     console.log("go to dashboard")
+        // }
     }
 
     return(
@@ -49,6 +65,7 @@ function Login(){
                     <Form.Label>Enter Password</Form.Label>
                     <Form.Control  type="password" name="password" onChange={handleChange} placeholder="Your password" required/>
                 </Form.Group>
+                <a href="/">forgot password?</a><br/>
                 <Button variant="success" onClick={submit}>Login</Button>
                 {
                 err && (
