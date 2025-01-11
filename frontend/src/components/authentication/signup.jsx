@@ -58,7 +58,7 @@ function Signup(){
                     Cookies.set('name',response.data.name, { expires: 2 })
                     Cookies.set('type',response.data.type, { expires: 2 })
                     //redirecting
-                    window.location.href = '/dashboard'
+                    window.location.href = '/ddashboard'
                 },(error)=>{
                     console.log(error.response.data.message)
                     setErr(error.response.data.message)
@@ -109,7 +109,7 @@ function Signup(){
                 <Form.Label>Re-enter Password</Form.Label>
                 <Form.Control  type="password" placeholder="Your password" name="cpassword"  onChange={handleChange} value={formData.cpassword} required/>
             </Form.Group>
-            <a href="/login">Have account? Sign In</a><br/>
+            <a href="/login" className="links">Have account? Sign In</a><br/>
             <Button variant="warning" type="submit" >SignUp</Button>
             
             {

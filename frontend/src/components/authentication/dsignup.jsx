@@ -1,4 +1,6 @@
 import {useState} from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 import '../../styles/auth.css';
 import logo from '../../media/main.png'
 import Button from 'react-bootstrap/Button';
@@ -42,24 +44,27 @@ function DSignup(){
         else if(formData["location"]===""){
             setErr("Select Location");
         }
+        //specialization check
+        else if(formData["specialization"]===""){
+            setErr("Select Specialization");
+        }
         //submission
         else{
             formData.cpassword=""
             formData.type="doctor"
-            // const response = await fetch("http://127.0.0.1:4000/signup", {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            //     body: JSON.stringify(formData),
-            // });
-            // if (!response.ok) {
-            //     setErr("Error at backend")
-            // }
-            // else{
-            //     console.log("go to dashboard")
-            //     window.location.href = '/dashboard'
-            // }
+            await axios.post("http://127.0.0.1:4000/signup",formData)
+            .then((response)=>{
+                //success -- all cookies are set for 2 days
+                console.log(response.data)
+                Cookies.set('email',response.data.email,{ expires: 2 })
+                Cookies.set('name',response.data.name, { expires: 2 })
+                Cookies.set('type',response.data.type, { expires: 2 })
+                //redirecting
+                window.location.href = '/dashboard'
+            },(error)=>{
+                console.log(error.response.data.message)
+                setErr(error.response.data.message)
+            })
 
         }
         
@@ -98,6 +103,17 @@ function DSignup(){
                     <option value="">Select Location</option>
                     <option value="bangalore">Bangalore</option>
                     <option value="chennai">Chennai</option>
+                </Form.Select>
+                </Col>
+            </Row>
+            <br/>
+            <Row>
+                <Col>
+                <Form.Select aria-label="Default select example" name="specialization"  onChange={handleChange} value={formData.specialization}>
+                    <option value="">Select Specialization</option>
+                    <option value="Pulmonology">Pulmonology</option>
+                    <option value="Thoraic Surgeon">Thoraic Surgeon</option>
+                    <option value="General">General</option>
                 </Form.Select>
                 </Col>
             </Row>

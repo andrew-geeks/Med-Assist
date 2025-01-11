@@ -7,6 +7,7 @@ import Home from './components/home';
 import Login from './components/authentication/login';
 import Signup from './components/authentication/signup';
 import Dashboard from './components/dashboard';
+import DocDashboard from './components/dashboard/ddashboard';
 import DSignup from './components/authentication/dsignup';
 import Chat from './components/chat';
 import Xray from './components/xray';
@@ -26,6 +27,37 @@ export const PrivatePatientRoute = ({ children}) => {
 
 }
 
+//private routing -- doctor
+export const PrivateDoctorRoute = ({ children}) => {
+  const loggedIn = Cookies.get("type");
+      
+  if (loggedIn !== undefined && loggedIn==='doctor') {
+    return children
+  }
+  else{
+    return <Navigate to="/login" />
+  }
+}
+
+//private routing -- authenticated
+export const PrivateAuthedRoute = ({ children}) => {
+  const loggedIn = Cookies.get("type");
+      
+  if (loggedIn === undefined) {
+    return children
+  }
+  else{
+    if(loggedIn==='patient'){
+      return <Navigate to="/dashboard" />
+    }
+    else{
+      return <Navigate to="/ddashboard" />
+    }
+    
+  }
+}
+
+
 
 
 
@@ -37,10 +69,11 @@ function App() {
         <Router>
           <Routes>
               <Route path='/' element={<Home/>}/>
-              <Route path='/login' element={<Login/>}/>
-              <Route path='/signup' element={<Signup/>}/>
-              <Route path='/dsignup' element={<DSignup/>}/>
+              <Route path='/login' element={<PrivateAuthedRoute><Login/></PrivateAuthedRoute>}/>
+              <Route path='/signup' element={<PrivateAuthedRoute><Signup/></PrivateAuthedRoute>}/>
+              <Route path='/dsignup' element={<PrivateAuthedRoute><DSignup/></PrivateAuthedRoute>}/>
               <Route path='/dashboard' element={<PrivatePatientRoute><Dashboard/></PrivatePatientRoute>}/>
+              <Route path='/ddashboard' element={<PrivateDoctorRoute><DocDashboard/></PrivateDoctorRoute>}/>
               <Route path="/chat" element={<Chat/>}/>
               <Route path="/xray" element={<Xray/>}/>
               <Route path="/summarize" element={<Summarize/>}/>

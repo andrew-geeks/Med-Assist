@@ -29,26 +29,18 @@ function Login(){
                 Cookies.set('name',response.data.name, { expires: 2 })
                 Cookies.set('type',response.data.type, { expires: 2 })
                 //redirecting
-                window.location.href = '/dashboard'
+                if(Cookies.get('type')==='patient'){
+                    window.location.href = '/dashboard'
+                }
+                else{
+                    window.location.href = '/ddashboard' //for doctors
+                }
+                
             })
             .catch((error)=>{
                 console.log(error)
             })
 
-        // const response = await fetch("http://127.0.0.1:4000/login", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(formData),
-        // });
-        // if (!response.ok) {
-        //     setErr("Incorrect Email or Password!")
-        // }
-        // else{
-        //     window.location.href = '/dashboard'
-        //     console.log("go to dashboard")
-        // }
     }
 
     return(
@@ -65,7 +57,8 @@ function Login(){
                     <Form.Label>Enter Password</Form.Label>
                     <Form.Control  type="password" name="password" onChange={handleChange} placeholder="Your password" required/>
                 </Form.Group>
-                <a href="/">forgot password?</a><br/>
+                <a href="/" className="links">forgot password?</a><br/>
+                <a href="/signup" className="links">new here?Sign up</a><br/>
                 <Button variant="success" onClick={submit}>Login</Button>
                 {
                 err && (

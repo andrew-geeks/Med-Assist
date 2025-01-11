@@ -12,3 +12,17 @@
     font-size: 20px;
     font-family:Arial, Helvetica, sans-serif;
 }
+
+.links {
+    text-decoration: none; /* Removes the underline */
+    color: #3498db; /* Default link color */
+    font-weight:lighter; /* Makes the text bold */
+    font-size: 16px; /* Font size */
+    transition: color 0.3s ease, text-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Hover effect for a tag */
+.links:hover {
+    color: rgb(2,0,36); /* Changes color when hovered */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Adds a shadow effect */
+}

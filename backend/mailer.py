@@ -1,18 +1,21 @@
 import os
 from dotenv import load_dotenv
-import smtplib
+import requests
 
 load_dotenv()
 class Mailer:
     def __init__(self):
         self.mail = os.environ.get('MAIL')
-        self.password = os.environ.get('MAIL_PASS')
-        self.server = smtplib.SMTP('smtp.mail.yahoo.com', 587)
-    
-    def start(self):
-        self.server.starttls()
-        self.server.login(self.mail, self.password)
+        self.api = os.environ.get('MAILGUN_API')
+        # self.password = os.environ.get('MAIL_PASS')
+        # self.server = smtplib.SMTP('smtp.mail.yahoo.com', 587)
     
     def welcome(self,name,send_mail):
-        self.server.sendmail(self.mail, send_mail, "welcome to MedAssist")
+        return requests.post(
+  		"https://api.mailgun.net/v3/sandbox1765924dabbd444bb9fb791e24d659b1.mailgun.org/messages",
+  		auth=("api", self.api),
+  		data={"from": "Excited User <mailgun@sandbox1765924dabbd444bb9fb791e24d659b1.mailgun.org>",
+  			"to": [send_mail],
+  			"subject": "Welcome to MedAssist",
+  			"text": "Testing some Mailgun awesomeness!"})
         
