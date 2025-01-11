@@ -11,3 +11,7 @@ Web Application using AI & Computer Vision to interpret X-Ray images, QnA bot po
 - Frontend: ReactJS
 - Backend: Flask, Ollama
 - Database: MongoDB
+
+## End Users
+- Patients & Normal people
+- Doctors & Medical Staff
