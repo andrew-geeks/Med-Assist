@@ -13,7 +13,12 @@ import pdfToText from 'react-pdftotext';
 function Summarize(){
     const [text, setText] = useState(""); //stores report text
     const [summ,setSum] = useState(""); //stores summary
-   
+    const [wc,setWc] = useState(70);
+    
+    const handleCount = (e)=>{
+        setWc(e.target.value)
+    }
+
     function extractText(event) {
         const file = event.target.files[0]
         pdfToText(file)
@@ -54,13 +59,14 @@ function Summarize(){
             <Navbar/>
             <div className="c1">
                 <h3>Upload any medical reports here to summarize..</h3>
-                <Form.Group controlId="formFile" className="mb-3 file" onSubmit={getSummary}>
-                    <Form.Label>Upload report in .pdf format</Form.Label>
-                    <Form.Control type="file" accept="application/pdf" className="custom-file-upload " onChange={extractText} required/>
-                    <br/>
-                   
-                    <Button variant="warning" onClick={getSummary}>Summarize📄</Button>
-                 </Form.Group>
+                <Form>
+                    <Form.Group controlId="formFile" className="mb-3 file" onSubmit={getSummary}>
+                        <Form.Label>Upload report in .pdf format</Form.Label>
+                        <Form.Control type="file" accept="application/pdf" className="custom-file-upload " onChange={extractText} required/>
+                        <br/>
+                        <Button variant="warning" onClick={getSummary}>Summarize📄</Button>
+                    </Form.Group>
+                </Form> 
                  <br/>
                  <br/>
             </div>

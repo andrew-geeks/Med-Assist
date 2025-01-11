@@ -1,4 +1,4 @@
-import NavBar from "./navbar/navbar";
+import NavBar from "../navbar/navbar";
 import Cookies from 'js-cookie';
 
 function Dashboard(){

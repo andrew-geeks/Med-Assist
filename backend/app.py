@@ -2,7 +2,7 @@ from flask import Flask,request,Response,jsonify
 from flask_cors import CORS
 import bcrypt
 from database import MongoDatabase
-# from mailer import Mailer
+from mailer import Mailer
 import json
 import pickle
 import os
@@ -32,7 +32,7 @@ salt = bytes(os.environ.get("SALT"),encoding='utf-8')
 DB  = MongoDatabase()
 mdb = DB.db #database variable
 
-# mail_func = Mailer()
+mail_func = Mailer()
 
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
 vector_store = FAISS.load_local("../../med_db", embeddings=embeddings, allow_dangerous_deserialization=True)

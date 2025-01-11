@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import Home from './components/home';
 import Login from './components/authentication/login';
 import Signup from './components/authentication/signup';
-import Dashboard from './components/dashboard';
+import Dashboard from './components/dashboard/dashboard';
 import DocDashboard from './components/dashboard/ddashboard';
 import DSignup from './components/authentication/dsignup';
 import Chat from './components/chat';
@@ -42,7 +42,6 @@ export const PrivateDoctorRoute = ({ children}) => {
 //private routing -- authenticated
 export const PrivateAuthedRoute = ({ children}) => {
   const loggedIn = Cookies.get("type");
-      
   if (loggedIn === undefined) {
     return children
   }
@@ -51,9 +50,8 @@ export const PrivateAuthedRoute = ({ children}) => {
       return <Navigate to="/dashboard" />
     }
     else{
-      return <Navigate to="/ddashboard" />
-    }
-    
+      return <Navigate to="/ddashboard" /> //doctor
+    } 
   }
 }
 

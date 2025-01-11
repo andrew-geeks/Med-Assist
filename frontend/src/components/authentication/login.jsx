@@ -39,6 +39,7 @@ function Login(){
             })
             .catch((error)=>{
                 console.log(error)
+                setErr("Incorrect Email/Password");
             })
 
     }
