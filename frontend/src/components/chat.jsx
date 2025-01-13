@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import {FourSquare} from "react-loading-indicators";
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -78,11 +78,12 @@ const Chat = () => {
       padding: "10px",
       overflowY: "auto",
       backgroundColor: "#f9f9f9",
+      
     },
   
     loading:{
       color: "blue",
-      display: display
+      display: display,
     },
     messageContainer: {
       margin: "10px 0",
@@ -160,7 +161,7 @@ const Chat = () => {
           </div>
         ))}
         <div style={styles.loading}>
-          <em>loading..</em>
+          <FourSquare color="#3168cc" size="small" text="Loading" textColor="" />
         </div>
       </div>
      

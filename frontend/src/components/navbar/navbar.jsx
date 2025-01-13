@@ -34,8 +34,12 @@ function NavBar(){
               <Nav.Item className='ms-auto'>
                 <Nav.Link href="/xray">Analyze X-Ray</Nav.Link>
               </Nav.Item>
-              <Nav.Link href="/summarize">Summarize Reports</Nav.Link>
-
+              <Nav.Item>
+                <Nav.Link href="/summarize">Summarize Reports</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/chat">Chat🗯️</Nav.Link>
+              </Nav.Item>
               <NavDropdown title="More" id="basic-nav-dropdown">
                 <NavDropdown.Item href="/login">LogIn</NavDropdown.Item>
                 <NavDropdown.Item href="/signup">SignUp</NavDropdown.Item>

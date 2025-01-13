@@ -7,7 +7,7 @@ import json
 import pickle
 import os
 from dotenv import load_dotenv
-
+import secrets
 
  
 # --- LLM IMPORTS --- 
@@ -27,12 +27,14 @@ from langchain_community.vectorstores import FAISS
 load_dotenv() 
 app = Flask(__name__)
 CORS(app)
-#'$2b$10$X4kv7j5ZcG39WgogSl16au'
 salt = bytes(os.environ.get("SALT"),encoding='utf-8')
 DB  = MongoDatabase()
 mdb = DB.db #database variable
 
 mail_func = Mailer()
+def generate_token(length=14):
+    return secrets.token_urlsafe(length)[:length]
+
 
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
 vector_store = FAISS.load_local("../../med_db", embeddings=embeddings, allow_dangerous_deserialization=True)
@@ -98,7 +100,16 @@ def login():
 
 @app.route("/forgotpassword",methods=["POST"]) 
 def forgot_password():
-    pass  
+    data = request.json
+    response = mdb.users.find_one(data)
+    #mail found
+    if(response):
+        token = generate_token() #getting unique token
+        mail_func.forgotpass(data["email"],token)
+        return jsonify({"message": "mail sent"}), 200
+    else:
+        return jsonify({"message":"mail not found"}),500
+
 
 @app.route("/chat",methods=["POST"])
 def chat():
@@ -107,6 +118,3 @@ def chat():
     return jsonify({"message":message}),200
     
 app.run(port=4000)
-
-# print(powerLLM("what is effusion?"))
-# print(powerLLM("what is effusion"))
