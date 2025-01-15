@@ -13,6 +13,7 @@ function Summarize(){
     const [text, setText] = useState(""); //stores report text
     const [summ,setSum] = useState(""); //stores summary
     const [progress,setProgress] = useState("none");
+    const [disSumm,setDisSumm] = useState("none");
     //const [wc,setWc] = useState(70);
     
     // const handleCount = (e)=>{
@@ -31,12 +32,13 @@ function Summarize(){
         console.log("summary invoked")
         const data = {
             "model": "llama3.2",
-            "prompt": text+". summarize the report in a concise way.",
+            "prompt": text+". summarize the above report in 100 words.",
             "stream": false
           }
 
           
           setProgress("")
+          setDisSumm("none")
           await fetch("http://localhost:11434/api/generate", {
             method: "POST",
             headers: {
@@ -49,6 +51,7 @@ function Summarize(){
                 var summary = data.response.split('**').join("\n");
                 setSum(summary)
                 setProgress("none");
+                setDisSumm("");
                 return data.response;
             }).catch((err) => {
                 console.log(err);
@@ -86,8 +89,11 @@ function Summarize(){
             </div>
             <br/>
             <div className="c2">
-                <h4>Report Summary</h4>
-                <p style={{"white-space": "pre-line"}}>{summ}</p>
+                <h4>Report Summary</h4><br/>
+                <div style={{"display":disSumm}} className="summary-block">
+                    <p style={{"white-space": "pre-line"}}>{summ}</p>
+                </div>
+                
             </div>
             
         </div>

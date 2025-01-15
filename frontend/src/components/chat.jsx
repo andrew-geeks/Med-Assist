@@ -161,7 +161,7 @@ const Chat = () => {
           </div>
         ))}
         <div style={styles.loading}>
-          <FourSquare color="#3168cc" size="small" text="Loading" textColor="" />
+          loading...
         </div>
       </div>
      
