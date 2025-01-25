@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import Home from './components/home';
 import Login from './components/authentication/login';
 import Signup from './components/authentication/signup';
+import ForgotPass from './components/authentication/forgotpass';
 import Dashboard from './components/dashboard/dashboard';
 import DocDashboard from './components/dashboard/ddashboard';
 import DSignup from './components/authentication/dsignup';
@@ -70,6 +71,7 @@ function App() {
               <Route path='/login' element={<PrivateAuthedRoute><Login/></PrivateAuthedRoute>}/>
               <Route path='/signup' element={<PrivateAuthedRoute><Signup/></PrivateAuthedRoute>}/>
               <Route path='/dsignup' element={<PrivateAuthedRoute><DSignup/></PrivateAuthedRoute>}/>
+              <Route path='/forgotpassword' element={<PrivateAuthedRoute><ForgotPass/></PrivateAuthedRoute>}/>
               <Route path='/dashboard' element={<PrivatePatientRoute><Dashboard/></PrivatePatientRoute>}/>
               <Route path='/ddashboard' element={<PrivateDoctorRoute><DocDashboard/></PrivateDoctorRoute>}/>
               <Route path="/chat" element={<Chat/>}/>

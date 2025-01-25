@@ -1,4 +1,5 @@
 from flask import Flask,request,Response,jsonify
+import requests
 from flask_cors import CORS
 import bcrypt
 from database import MongoDatabase
@@ -8,6 +9,7 @@ import pickle
 import os
 from dotenv import load_dotenv
 import secrets
+import PyPDF2
 
  
 # --- LLM IMPORTS --- 
@@ -32,6 +34,8 @@ DB  = MongoDatabase()
 mdb = DB.db #database variable
 
 mail_func = Mailer()
+
+#token for forgot password
 def generate_token(length=14):
     return secrets.token_urlsafe(length)[:length]
 
@@ -42,8 +46,8 @@ vector_store = FAISS.load_local("../../med_db", embeddings=embeddings, allow_dan
 retriever = vector_store.as_retriever(search_type="mmr", search_kwargs = {'k': 2, 'fetch_k': 100,'lambda_mult': 1})
 model = ChatOllama(model="llama3.2" ,base_url="http://localhost:11434")
 
-prompt = """You are a Medical Chatbot answering questions strictly related to chest diseases. 
-Do not provide any consultation. Give answers only for medical queries. Answer the question based only on the following context:
+prompt = """You are a Medical Chatbot answering questions strictly related to healthcare. 
+Do not provide any consultation or suggest medicines. Give answers only for medical queries. Answer the question based only on the following context:
 {context}
 Question: {question}
 """
@@ -116,5 +120,45 @@ def chat():
     data = request.json
     message = powerLLM(data["chat"])
     return jsonify({"message":message}),200
+
+
+
+@app.route("/summarize",methods=["POST"])
+def summarize():
+    if 'pdf' not in request.files:
+        return jsonify({'message': 'No file part'}), 400
+
+    file = request.files['pdf']
+
+    if file.filename == '':
+        return jsonify({'message': 'No selected file'}), 400    
+    try:
+        
+        reader = PyPDF2.PdfReader(file)
+        text = ''
+        for page in reader.pages:
+            text += page.extract_text()
+    except:
+         return jsonify({'message': 'File Parsing error'}), 400  
+
+    payload = {
+        "model": "llama3.2",  
+        "prompt": text+" \nSummarize this report briefly. Include all details. Do not provide any consultation.",
+        "stream": False
+    }
+     
+    try:
+        response = requests.post("http://localhost:11434/api/generate", json=payload)
+        if response.status_code == 200:
+            return response.json(),200
+        else:
+            print(f"Error: {response.status_code}, {response.text}")
+        return jsonify({'message': 'LLM error'}), 400
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        return jsonify({'message': 'LLM error'}), 400
+
+    
+    
     
 app.run(port=4000)

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import {FourSquare} from "react-loading-indicators";
+//import {FourSquare} from "react-loading-indicators";
+//import Navbar from "./navbar/navbar";
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -142,6 +143,8 @@ const Chat = () => {
   };
 
   return (
+    <>
+    {/* <Navbar/> */}
     <div style={styles.container}>
       <h3>MedBot</h3>
       <div style={styles.chatWindow}>
@@ -178,6 +181,7 @@ const Chat = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

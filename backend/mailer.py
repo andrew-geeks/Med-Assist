@@ -21,4 +21,10 @@ class Mailer:
   			"text": "Hello "+name+".\nHearty Welcome to the modern healthcare through AI!\n\n\nRegards\nTeam MedAssist"})
 
     def forgotpass(self,send_mail,rtoken):
-        pass
+       return requests.post(
+  		self.domain_url,
+  		auth=("api", self.api),
+  		data={"from": "MedAssist Crew <medassisst.crew@gmail.com>",
+  			"to": [send_mail],
+  			"subject": "Reset Your Password",
+  			"text": "Click this link to reset your password: http://localhost:3000/resetpassword?token="+rtoken})

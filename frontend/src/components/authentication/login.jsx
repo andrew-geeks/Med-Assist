@@ -58,7 +58,7 @@ function Login(){
                     <Form.Label>Enter Password</Form.Label>
                     <Form.Control  type="password" name="password" onChange={handleChange} placeholder="Your password" required/>
                 </Form.Group>
-                <a href="/" className="links">forgot password?</a><br/>
+                <a href="/forgotpassword" className="links">forgot password?</a><br/>
                 <a href="/signup" className="links">new here?Sign up</a><br/>
                 <Button variant="success" onClick={submit}>Login</Button>
                 {
