@@ -27,4 +27,6 @@ class Mailer:
   		data={"from": "MedAssist Crew <medassisst.crew@gmail.com>",
   			"to": [send_mail],
   			"subject": "Reset Your Password",
-  			"text": "Click this link to reset your password: http://localhost:3000/resetpassword?token="+rtoken})
+  			"text": "Click this link to reset your password: http://localhost:3000/resetpassword?token="+rtoken+"\n\n\nRegards\nTeam MedAssist"})
+
+

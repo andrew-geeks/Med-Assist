@@ -109,7 +109,8 @@ def forgot_password():
     #mail found
     if(response):
         token = generate_token() #getting unique token
-        mail_func.forgotpass(data["email"],token)
+        mail_func.forgotpass(data["email"],str(token)) #sending reset password link
+        mdb.users.update_one({"email":data["email"]},{"rtoken":token})
         return jsonify({"message": "mail sent"}), 200
     else:
         return jsonify({"message":"mail not found"}),500

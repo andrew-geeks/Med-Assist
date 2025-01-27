@@ -1,0 +1,41 @@
+.head{
+    font-size: 25px;
+    padding-top: 2%;
+    padding-left: 5%;
+}
+
+.info-container {
+    padding-top: 5%;
+    width: 800px; /* Fixed width */
+    max-width: 100%; /* Responsive on smaller screens */
+    margin: 0 auto;
+    display: flex;
+    gap: 16px;
+}
+  
+.box {
+flex: 1; /* Equal width for all boxes */
+background: rgb(94,75,191);
+background: linear-gradient(90deg, rgba(94,75,191,1) 24%, rgba(209,187,187,1) 86%);
+color: white;
+text-align: center;
+padding: 20px;
+border-radius: 8px;
+transition: transform 0.3s ease;
+}
+
+.box .box-val{
+    font-size: 40px;
+}
+
+.box:hover {
+transform: scale(1.05);
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+.container {
+    flex-direction: column;
+    gap: 12px;
+}
+}
