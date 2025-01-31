@@ -14,6 +14,7 @@ import Chat from './components/chat';
 import Xray from './components/xray';
 import Summarize from './components/summarize';
 import DoctorAppointment from './components/doctor/appointment';
+import Confirmed from './components/doctor/confirmation';
 
 
 //private routing -- patient
@@ -75,6 +76,7 @@ function App() {
               <Route path='/forgotpassword' element={<PrivateAuthedRoute><ForgotPass/></PrivateAuthedRoute>}/>
               <Route path='/dashboard' element={<PrivatePatientRoute><Dashboard/></PrivatePatientRoute>}/>
               <Route path='/appointment' element={<PrivatePatientRoute><DoctorAppointment/></PrivatePatientRoute>}/>
+              <Route path='/confirm' element={<PrivatePatientRoute><Confirmed/></PrivatePatientRoute>}/>
               <Route path='/ddashboard' element={<PrivateDoctorRoute><DocDashboard/></PrivateDoctorRoute>}/>
               <Route path="/chat" element={<Chat/>}/>
               <Route path="/xray" element={<Xray/>}/>

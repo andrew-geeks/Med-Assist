@@ -1,3 +1,14 @@
-.appoint-card{
+.appoint-head{
     padding-top: 5%;
+    text-align: center;
+}
+
+.appoint-card{
+    padding-top: 2%;
+}
+
+.confirm-div{
+    padding-top: 20%;
+
+    text-align: center;
 }
