@@ -128,6 +128,42 @@ def forgot_password():
         return jsonify({"message":"mail not found"}),500
 
 
+@app.route("/userdata",methods=["GET"])
+def getuserdata():
+    email = request.args.get("email")
+    response = mdb.users.find_one({"email":email})
+    del response["password"] #removing password
+    del response["_id"]
+    if(response):
+        return jsonify(response),200
+    else:
+        return jsonify({"message":"data not found"}),500
+    
+@app.route("/docdata",methods=["GET"]) #retrieves deep info of doctors(days,time slots,hospital details)
+def getdocdata():
+    id = request.args.get("id")
+    response = mdb.doctor.find_one({"d_id":id})
+    del response["_id"]
+    if(response):
+        return jsonify(response),200
+    else:
+        return jsonify({"message":"data not found"}),500
+
+@app.route("/updatedoc",methods=["POST"])
+def updatedocdata():
+    data = request.json
+    id = data["d_id"]
+    del data["d_id"]
+    data["consultationFee"] = int(data["consultationFee"])
+    response = mdb.doctor.update_one({"d_id":id},{"$set":data})
+    if(response):
+        return jsonify({"message":"success"}),200
+    else:
+        return jsonify({"message":"data not found"}),500
+
+
+
+
 @app.route("/chat",methods=["POST"])
 def chat():
     data = request.json

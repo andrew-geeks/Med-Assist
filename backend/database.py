@@ -37,9 +37,12 @@ class MongoDatabase:
             "properties": {
                 "d_id": {"bsonType": "string"},
                 "specialization": {"bsonType": "string"},
-                "hospital": {"bsonType": "string"},
-                "h_place": {"bsonType": "string"},
-                "fee": {"bsonType": "int"},
+                "hospitalName": {"bsonType": "string"},
+                "hospitalPlace": {"bsonType": "string"},
+                "consultationFee": {"bsonType": "int"},
+                "availableDays": {"bsonType": "array"},
+                "availableTimeSlots": {"bsonType": "array"},
+                "phoneNumber": {"bsonType": "string"}
             }
             
         }   

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect,useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import {Info,UserRoundPen,Save} from 'lucide-react';
+import axios from 'axios';
+import Cookie from 'js-cookie';
 
 const EditProfile = () => {
   const [formData, setFormData] = useState({
@@ -13,13 +15,35 @@ const EditProfile = () => {
     availableDays: [],
     availableTimeSlots: [],
   });
-
   const [phoneError, setPhoneError] = useState("");
 
-  // Days of the week
+  useEffect(()=>{
+    const fetchData= async ()=>{
+      const response = await axios.get("http://127.0.0.1:4000/userdata",{params:{email:Cookie.get("email")}}) //retrieving user data
+      const items = {
+        doctorName:response.data.name,
+        location:response.data.location,
+      }
+      setFormData(prevdata=>({...prevdata,...items}))
+      const docResponse = await axios.get("http://127.0.0.1:4000/docdata",{params:{id:Cookie.get("id")}})
+      const docData = {
+        hospitalName:docResponse.data.hospitalName,
+        hospitalPlace:docResponse.data.hospitalPlace,
+        consultationFee:docResponse.data.consultationFee,
+        phoneNumber:docResponse.data.phoneNumber
+      }
+      setFormData(prevdata=>({...prevdata,...docData}))
+      console.log(formData)
+    };
+
+    fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+
+
+
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-  // Generate time slots in 12-hour format (9 AM - 10 AM to 8 PM - 9 PM)
   const timeSlots = Array.from({ length: 12 }, (_, i) => {
     const startHour = 9 + i;
     const endHour = startHour + 1;
@@ -68,13 +92,23 @@ const EditProfile = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.phoneNumber.length !== 10) {
       setPhoneError("Phone number must be exactly 10 digits");
       return;
     }
-    console.log("Updated Profile Data:", formData);
+    formData.d_id = Cookie.get("id")
+    await axios.post("http://127.0.0.1:4000/updatedoc",formData)
+    .then(response=>{
+      console.log("Profile Updated")
+      window.location.href="/ddashboard"
+    })
+    .catch(error=>{
+      console.log("Server Error")
+      return;
+    })
+    //console.log("Updated Profile Data:", formData);
   };
 
   return (
@@ -85,7 +119,7 @@ const EditProfile = () => {
           <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Label>Doctor Name</Form.Label>
-              <Form.Control type="text" name="doctorName" value={formData.doctorName} onChange={handleChange} placeholder="Enter doctor's name" required/>
+              <Form.Control type="text" disabled="true" name="doctorName" value={formData.doctorName} onChange={handleChange} required/>
             </Form.Group>
           </Col>
           <Col md={6}>
@@ -100,7 +134,7 @@ const EditProfile = () => {
           <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Label>Location</Form.Label>
-              <Form.Control type="text" name="location" value={formData.location} onChange={handleChange} placeholder="Enter location" required/>
+              <Form.Control type="text" name="location" value={formData.location} onChange={handleChange} disabled="true" required/>
             </Form.Group>
           </Col>
           <Col md={6}>
@@ -125,13 +159,7 @@ const EditProfile = () => {
           <Row>
             {daysOfWeek.map((day) => (
               <Col key={day} xs={6} md={4}>
-                <Form.Check
-                  type="checkbox"
-                  label={day}
-                  value={day}
-                  checked={formData.availableDays.includes(day)}
-                  onChange={handleDayChange}
-                />
+                <Form.Check type="checkbox" label={day} value={day} checked={formData.availableDays.includes(day)} onChange={handleDayChange}/>
               </Col>
             ))}
           </Row>
@@ -142,18 +170,12 @@ const EditProfile = () => {
           <Row>
             {timeSlots.map((slot) => (
               <Col key={slot} xs={6} md={4}>
-                <Form.Check
-                  type="checkbox"
-                  label={slot}
-                  value={slot}
-                  checked={formData.availableTimeSlots.includes(slot)}
-                  onChange={handleTimeSlotChange}
-                />
+                <Form.Check type="checkbox" label={slot} value={slot} checked={formData.availableTimeSlots.includes(slot)} onChange={handleTimeSlotChange}/>
               </Col>
             ))}
           </Row>
         </Form.Group>
-        <Button variant="warning" type="submit">Save Details <Save/></Button>
+        <Button variant="warning" type="submit">Save Details<Save/></Button>
       </Form>
     </Container>
   );

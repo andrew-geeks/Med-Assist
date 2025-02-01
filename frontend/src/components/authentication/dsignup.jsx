@@ -55,7 +55,7 @@ function DSignup(){
             await axios.post("http://127.0.0.1:4000/signup",formData)
             .then((response)=>{
                 //success -- all cookies are set for 2 days
-                console.log(response.data)
+                //console.log(response.data)
                 Cookies.set('email',response.data.email,{ expires: 2 })
                 Cookies.set('name',response.data.name, { expires: 2 })
                 Cookies.set('type',response.data.type, { expires: 2 })
