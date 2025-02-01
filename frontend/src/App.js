@@ -15,6 +15,7 @@ import Xray from './components/xray';
 import Summarize from './components/summarize';
 import DoctorAppointment from './components/doctor/appointment';
 import Confirmed from './components/doctor/confirmation';
+import EditProfile from './components/doctor/editProfile';
 
 
 //private routing -- patient
@@ -78,6 +79,7 @@ function App() {
               <Route path='/appointment' element={<PrivatePatientRoute><DoctorAppointment/></PrivatePatientRoute>}/>
               <Route path='/confirm' element={<PrivatePatientRoute><Confirmed/></PrivatePatientRoute>}/>
               <Route path='/ddashboard' element={<PrivateDoctorRoute><DocDashboard/></PrivateDoctorRoute>}/>
+              <Route path='/editprofile' element={<PrivateDoctorRoute><EditProfile/></PrivateDoctorRoute>}/>
               <Route path="/chat" element={<Chat/>}/>
               <Route path="/xray" element={<Xray/>}/>
               <Route path="/summarize" element={<Summarize/>}/>

@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import '../../styles/dashboard.css'
 
 function Dashboard(){
+
     return(
         <div>
             <NavBar/>

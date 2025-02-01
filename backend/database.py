@@ -27,7 +27,28 @@ class MongoDatabase:
         self.db.command("collMod","users",validator=schema)
         self.db.users.create_index([( "email", 1 )],unique=True) #for making email unique
         print("users validated")
+    
+    
+    def DoctorSchema(self):
+        schema = {
+        "$jsonSchema":{
+            "bsonType": "object",
+            "required":["d_id","specialization"],
+            "properties": {
+                "d_id": {"bsonType": "string"},
+                "specialization": {"bsonType": "string"},
+                "hospital": {"bsonType": "string"},
+                "h_place": {"bsonType": "string"},
+                "fee": {"bsonType": "int"},
+            }
+            
+        }   
+        }
+        #self.db.create_collection("doctor")
+        self.db.command("collMod","doctor",validator=schema)
+        print("doctor validated")
 
 MDb = MongoDatabase()
 MDb.UserSchema()
+MDb.DoctorSchema()
         

@@ -10,6 +10,7 @@ import os
 from dotenv import load_dotenv
 import secrets
 import PyPDF2
+from bson import ObjectId
 
  
 # --- LLM IMPORTS --- 
@@ -82,6 +83,17 @@ def signup():
     try:
         mdb.users.insert_one(data)
         mail_func.welcome(name,email)
+        if(a_type == "doctor"):
+            d_response = mdb.users.find_one(data) #to get object_id
+            
+            d_data = {
+                "d_id":str(d_response["_id"]),
+                "specialization":data["specialization"],
+            }
+            mdb.doctor.insert_one(d_data)
+            return jsonify({"message": "successful","name":name,"email":email,"type":a_type,"id":str(d_response["_id"])}), 200
+        
+        #return for normal users    
         return jsonify({"message": "successful","name":name,"email":email,"type":a_type}), 200
     except:
         return jsonify({"message": "MailId already in use"}), 500
@@ -97,7 +109,7 @@ def login():
     if(response):
         # name = response["name"]
         # a_type = response["type"]
-        return jsonify({"message": "successful","email":response["email"],"name":response["name"],"type":response["type"]}), 200
+        return jsonify({"message": "successful","email":response["email"],"name":response["name"],"type":response["type"],"id":str(response["_id"])}), 200
     else:
         return jsonify({"message": "incorrect"}), 500
 

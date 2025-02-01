@@ -53,6 +53,8 @@ const DoctorAppointment = () => {
                     <Form.Label>Select Appointment Date:</Form.Label>
                     <Form.Control
                         type="date"
+                        min="2025-02-01" 
+                        max="2025-04-01"
                         value={appointmentDate}
                         onChange={(e) => setAppointmentDate(e.target.value)}
                     />

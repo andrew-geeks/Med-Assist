@@ -59,8 +59,9 @@ function DSignup(){
                 Cookies.set('email',response.data.email,{ expires: 2 })
                 Cookies.set('name',response.data.name, { expires: 2 })
                 Cookies.set('type',response.data.type, { expires: 2 })
+                Cookies.set('id',response.data.id, { expires: 2 })
                 //redirecting
-                window.location.href = '/dashboard'
+                window.location.href = '/editprofile'
             },(error)=>{
                 console.log(error.response.data.message)
                 setErr(error.response.data.message)

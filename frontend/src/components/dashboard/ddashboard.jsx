@@ -3,7 +3,7 @@ import Cookie from 'js-cookie'
 import '../../styles/dashboard.css'
 //Doctor-dashboard
 function DocDashboard(){
-    
+    //console.log(Cookie.get("id"))
     return(
         <>
             <NavBar/>

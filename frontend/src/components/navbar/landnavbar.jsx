@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import navlogo from '../../media/main.png'
-
+import Cookies from 'js-cookie'
 
 
 
@@ -29,7 +29,7 @@ function LandingNavBar(){
               <NavDropdown title="More" id="basic-nav-dropdown">
                 <NavDropdown.Item href="/login">LogIn</NavDropdown.Item>
                 <NavDropdown.Item href="/signup">SignUp</NavDropdown.Item>
-                <NavDropdown.Item href="#doctors">For Doctors</NavDropdown.Item>
+                {Cookies.get("email")===null?<NavDropdown.Item href="/dsignup">For Doctors</NavDropdown.Item>:null}
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.4">
                   About
