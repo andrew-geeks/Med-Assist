@@ -33,7 +33,7 @@ const EditProfile = () => {
         phoneNumber:docResponse.data.phoneNumber
       }
       setFormData(prevdata=>({...prevdata,...docData}))
-      console.log(formData)
+      //console.log(formData)
     };
 
     fetchData();

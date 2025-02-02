@@ -9,6 +9,9 @@
 
 .confirm-div{
     padding-top: 20%;
-
     text-align: center;
+}
+
+.confirm-text{
+    color: green;
 }

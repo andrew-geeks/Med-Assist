@@ -15,7 +15,7 @@ class Mailer:
         return requests.post(
   		self.domain_url,
   		auth=("api", self.api),
-  		data={"from": "MedAssist Crew <medassisst.crew@gmail.com>",
+  		data={"from": "MedAssist Crew <medassist.crew@gmail.com>",
   			"to": [send_mail],
   			"subject": "Welcome to MedAssist",
   			"text": "Hello "+name+".\nHearty Welcome to the modern healthcare through AI!\n\n\nRegards\nTeam MedAssist"})
@@ -24,9 +24,17 @@ class Mailer:
        return requests.post(
   		self.domain_url,
   		auth=("api", self.api),
-  		data={"from": "MedAssist Crew <medassisst.crew@gmail.com>",
+  		data={"from": "MedAssist Crew <medassist.crew@gmail.com>",
   			"to": [send_mail],
   			"subject": "Reset Your Password",
   			"text": "Click this link to reset your password: http://localhost:3000/resetpassword?token="+rtoken+"\n\n\nRegards\nTeam MedAssist"})
-
+    
+    def appointmentconfirmation(self,send_mail,doc_name,doc_phno,appt_date,time_slot,fee,address):
+         return requests.post(
+  		self.domain_url,
+  		auth=("api", self.api),
+  		data={"from": "MedAssist Crew <medassist.crew@gmail.com>",
+  			"to": [send_mail],
+  			"subject": "Appointment Confirmation",
+  			"text": "Your Appointment has been confirmed. Below are the details.\n\n\n"+"Appointment Date: "+appt_date+"\nTime Slot: "+time_slot+"\nDoctor Name: "+doc_name+"\nDoctor Phone:"+doc_phno+"\nAddress: "+address+"\nConsultation Charges: "+fee+"\n\n\nRegards\nTeam MedAssist"})
 

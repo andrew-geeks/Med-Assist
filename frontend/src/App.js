@@ -76,7 +76,7 @@ function App() {
               <Route path='/dsignup' element={<PrivateAuthedRoute><DSignup/></PrivateAuthedRoute>}/>
               <Route path='/forgotpassword' element={<PrivateAuthedRoute><ForgotPass/></PrivateAuthedRoute>}/>
               <Route path='/dashboard' element={<PrivatePatientRoute><Dashboard/></PrivatePatientRoute>}/>
-              <Route path='/appointment' element={<PrivatePatientRoute><DoctorAppointment/></PrivatePatientRoute>}/>
+              <Route path='/appointment/:id' element={<PrivatePatientRoute><DoctorAppointment/></PrivatePatientRoute>}/>
               <Route path='/confirm' element={<PrivatePatientRoute><Confirmed/></PrivatePatientRoute>}/>
               <Route path='/ddashboard' element={<PrivateDoctorRoute><DocDashboard/></PrivateDoctorRoute>}/>
               <Route path='/editprofile' element={<PrivateDoctorRoute><EditProfile/></PrivateDoctorRoute>}/>

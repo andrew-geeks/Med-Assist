@@ -50,8 +50,51 @@ class MongoDatabase:
         #self.db.create_collection("doctor")
         self.db.command("collMod","doctor",validator=schema)
         print("doctor validated")
+    
+    def PaymentsSchema(self):
+        schema = {
+            "$jsonSchema":{
+            "bsonType": "object",
+            "properties": {
+                "orderCreationId": {"bsonType": "string"},
+                "razorpayPaymentId": {"bsonType": "string"},
+                "razorpayOrderId": {"bsonType": "string"},
+                "razorpaySignature": {"bsonType": "string"},
+                "booked_email": {"bsonType": "string"},
+                "pay_date": {"bsonType": "string"},
+            }
+        }
+        }
+        #self.db.create_collection("payments")
+        self.db.command("collMod","payments",validator=schema)
+        print("payments validated")
+    
+    def AppointmentSchema(self):
+        schema = {
+            "$jsonSchema":{
+            "bsonType": "object",
+            "properties": {
+                "patient_mail": {"bsonType": "string"},
+                "doc_id": {"bsonType": "string"},
+                "doctor_name": {"bsonType": "string"},
+                "specialization": {"bsonType": "string"},
+                "doc_pho": {"bsonType": "string"},
+                "appointment_date": {"bsonType": "string"},
+                "fee": {"bsonType": "int"},
+                "time_slot": {"bsonType": "string"},
+                "location_address": {"bsonType": "string"},
+            }
+        }
+        }
+        
+        #self.db.create_collection("appointments")
+        self.db.command("collMod","appointments",validator=schema)
+        print("appointments validated")
+    
 
 MDb = MongoDatabase()
 MDb.UserSchema()
 MDb.DoctorSchema()
+MDb.PaymentsSchema()
+MDb.AppointmentSchema()
         

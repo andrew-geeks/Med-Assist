@@ -11,6 +11,8 @@ from dotenv import load_dotenv
 import secrets
 import PyPDF2
 from bson import ObjectId
+import razorpay
+
 
  
 # --- LLM IMPORTS --- 
@@ -35,6 +37,9 @@ DB  = MongoDatabase()
 mdb = DB.db #database variable
 
 mail_func = Mailer()
+
+#razor-pay
+client = razorpay.Client(auth=(os.environ.get("RP_KEYID"),os.environ.get("RP_KEY_SECRET")))
 
 #token for forgot password
 def generate_token(length=14):
@@ -161,7 +166,48 @@ def updatedocdata():
     else:
         return jsonify({"message":"data not found"}),500
 
+# --- APPOINTMENTS & PAYMENTS ---
 
+@app.route("/pay",methods=["POST"])
+def pay():
+    reqdata=request.json
+    data = { "amount": int(reqdata["amount"])*100, "currency": "INR", "receipt": "order_rcptid_11" }
+    payment = client.order.create(data=data)
+    return jsonify({"amount":data["amount"],"order_id":payment["id"],"currency":data["currency"]}),200
+    
+@app.route("/paysuccess",methods=["POST"])
+def paysucess():
+    data = request.json
+    try:
+        mdb.payments.insert_one(data)
+        return jsonify({"message":"sucess"}),200
+    except:
+        return jsonify({"message":"payments-insertion error"}),500
+
+@app.route("/appointment",methods=["POST"])
+def appointment():
+    data = request.json
+    mail_func.appointmentconfirmation(data["patient_mail"],data["doctor_name"],data["doc_pho"],data["appointment_date"],data["time_slot"],str(data["fee"]),data["location_address"])
+    try:
+        mdb.appointments.insert_one(data)
+        #mailing to user
+        return jsonify({"message":"sucess"}),200
+    except:
+        return jsonify({"message":"appointments-insertion error"}),500
+    
+@app.route("/getappointments",methods=["GET"])
+def getappointment():
+    email = request.args.get("email")
+    data = mdb.appointments.find({"patient_mail":email},{"_id": 0})
+    return jsonify(list(data)),200
+    # try:
+    #     data = mdb.appointments.find({"patient_mail":email})
+    #     del data["_id"]
+    #     return jsonify(data),200
+    # except:
+    #     return jsonify({"message":"error"}),500
+    
+# ----------------
 
 
 @app.route("/chat",methods=["POST"])
