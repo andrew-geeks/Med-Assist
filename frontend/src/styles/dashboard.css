@@ -13,7 +13,7 @@
     gap: 16px;
 }
   
-.box {
+.info-container .box {
 flex: 1; /* Equal width for all boxes */
 background: rgb(94,75,191);
 background: linear-gradient(90deg, rgba(94,75,191,1) 24%, rgba(209,187,187,1) 86%);

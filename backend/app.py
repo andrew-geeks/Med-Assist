@@ -206,6 +206,18 @@ def getappointment():
     #     return jsonify(data),200
     # except:
     #     return jsonify({"message":"error"}),500
+
+#for doctors
+@app.route("/fetchappointments",methods=["GET"])
+def fetchappointment():
+    id = request.args.get("id")
+    data = mdb.appointments.find({"doc_id":id},{"_id": 0})
+    if(data=={}):
+        return jsonify({"message":"no appointments"}),500
+    else:
+        return jsonify(list(data)),200
+    
+
     
 # ----------------
 
@@ -227,7 +239,7 @@ def summarize():
 
     if file.filename == '':
         return jsonify({'message': 'No selected file'}), 400    
-    try:
+    try:    
         
         reader = PyPDF2.PdfReader(file)
         text = ''

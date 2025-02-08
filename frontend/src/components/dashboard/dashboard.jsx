@@ -9,21 +9,24 @@ import { Table, Container } from 'react-bootstrap';
 function Dashboard(){
     const [appointments, setAppointments] = useState([]);
     useEffect(() => {
-        const fetchAppointments = async ()=>{
-            await axios.get("http://127.0.0.1:4000/getappointments",{params:{email:Cookies.get("email")}}) //retrieve all appointments
-            .then(async response=>{
-                const ex_response = response.data;
-                const updatedArray = ex_response.map((item, index) => ({
-                    id: index + 1, // Adding ID starting from 1
-                    ...item,       // Spreading existing object properties
-                  }));
-                await setAppointments(prevdata=>([...prevdata,...updatedArray]))
-                console.log(response.data)
-            })
+        const fetchAppointments = async () => {
+            try {
+                const response = await axios.get("http://127.0.0.1:4000/getappointments", {
+                    params: { email: Cookies.get("email") }
+                });
+    
+                const updatedArray = response.data.map((item, index) => ({
+                    id: index + 1, // Assigning ID starting from 1
+                    ...item,       // Keeping existing properties
+                }));
+                setAppointments(updatedArray); // Setting state directly (no duplication)
+            } catch (error) {
+                console.error("Error fetching appointments:", error);
+            }
         };
+    
         fetchAppointments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
+    }, []);
 
     return(
         <div>
@@ -35,6 +38,7 @@ function Dashboard(){
                 <Table striped bordered hover responsive>
                     <thead>
                     <tr>
+                        <th>Id</th>
                         <th>Date</th>
                         <th>Time Slot</th>
                         <th>Doctor Name</th>
