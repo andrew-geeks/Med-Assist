@@ -4,6 +4,7 @@ from flask_cors import CORS
 import bcrypt
 from database import MongoDatabase
 from mailer import Mailer
+from model import Predict
 import json
 import pickle
 import os
@@ -12,6 +13,11 @@ import secrets
 import PyPDF2
 from bson import ObjectId
 import razorpay
+import numpy as np
+
+from tensorflow.keras.applications.densenet import preprocess_input
+import cv2
+from tensorflow.keras.models import load_model
 
 
  
@@ -37,6 +43,12 @@ DB  = MongoDatabase()
 mdb = DB.db #database variable
 
 mail_func = Mailer()
+
+img_model  = Predict()
+UPLOAD_FOLDER="images"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+
 
 #razor-pay
 client = razorpay.Client(auth=(os.environ.get("RP_KEYID"),os.environ.get("RP_KEY_SECRET")))
@@ -71,8 +83,15 @@ def powerLLM(question):
     )
     
     return rag_chain.invoke(question+" in 35 words")
+
+#image processing for chest xray
+def preprocess_image(img_path, img_size=(320, 320)):
+    img = cv2.imread(img_path)  # Read image
+    img = cv2.resize(img, img_size)  # Resize
+    img = np.expand_dims(img, axis=0)  # Add batch dimension
+    img = preprocess_input(img)  # Normalize
     
-    
+    return img
     
 
 @app.route("/signup",methods=['POST'])
@@ -266,6 +285,24 @@ def summarize():
         return jsonify({'message': 'LLM error'}), 400
 
     
+#predict disease from chest x-ray    
+@app.route("/predxray", methods=["POST"])
+def predict_image():
+    if "file" not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files["file"]
+    if file.filename == "":
+        return jsonify({"error": "No selected file"}), 400
+
+    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(file_path)
+    
+    preds = img_model.getres(file_path) # Get predictions
+    os.remove(file_path)#removing file path
+    return jsonify({"predicted_class": preds})
     
     
+    
+
 app.run(port=4000)

@@ -47,9 +47,16 @@ const EditProfile = () => {
   const timeSlots = Array.from({ length: 12 }, (_, i) => {
     const startHour = 9 + i;
     const endHour = startHour + 1;
-    const formatTime = (hour) => `${hour <= 11 ? hour : hour - 12} ${hour < 12 ? "AM" : "PM"}`;
+    
+    const formatTime = (hour) => {
+        const period = hour < 12 ? "AM" : "PM";
+        const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+        return `${formattedHour} ${period}`;
+    };
+
     return `${formatTime(startHour)} - ${formatTime(endHour)}`;
   });
+
 
   // Handle input changes
   const handleChange = (e) => {

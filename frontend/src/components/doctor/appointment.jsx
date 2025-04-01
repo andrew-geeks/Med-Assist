@@ -177,7 +177,7 @@ const DoctorAppointment = () => {
                 style={{ width: "100px", height: "100px" }}
                 />
                 <Card.Body className="text-center">
-                <Card.Title>{docUser.doctorName}</Card.Title>
+                <Card.Title>Dr. {docUser.doctorName}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">{docUser.specialization}</Card.Subtitle>
                 <br/>
                 <Card.Subtitle className="mb-2 text-muted"><Hospital/> {docUser.hospitalName}, {docUser.hospitalPlace}</Card.Subtitle>
