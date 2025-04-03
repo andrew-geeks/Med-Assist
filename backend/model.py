@@ -29,6 +29,7 @@ class Predict:
 
     def preprocess_image(img_path, img_size=(320, 320)):
         img = cv2.imread(img_path)  # Read image
+        #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = cv2.resize(img, img_size)  # Resize
         img = np.expand_dims(img, axis=0)  # Add batch dimension
         img = preprocess_input(img)  # Normalize
