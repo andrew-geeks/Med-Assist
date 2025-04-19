@@ -18,7 +18,7 @@ import numpy as np
 from tensorflow.keras.applications.densenet import preprocess_input
 import cv2
 from tensorflow.keras.models import load_model
-
+from transformers import pipeline
 
  
 # --- LLM IMPORTS --- 
@@ -48,6 +48,7 @@ img_model  = Predict()
 UPLOAD_FOLDER="images"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+captioner = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
 
 
 #razor-pay
@@ -297,10 +298,14 @@ def predict_image():
 
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
     file.save(file_path)
-    
-    preds = img_model.getres(file_path) # Get predictions
-    os.remove(file_path)#removing file path
-    return jsonify({"predicted_class": preds})
+    caption = captioner(file_path)[0]["generated_text"]
+    if("chest" in caption):
+        preds = img_model.getres(file_path) # Get predictions
+        os.remove(file_path)#removing file path
+        return jsonify({"predicted_class":preds}), 200
+    else:
+        os.remove(file_path)#removing file path
+        return jsonify({"error":"Provide a valid Chest X-Ray Image"}), 400
     
     
     

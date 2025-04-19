@@ -10,6 +10,7 @@ import Alert from 'react-bootstrap/Alert';
 import logo from '../../media/main.png';
 import Cookies from 'js-cookie';
 //USE REACT DATE PICKER FOR SELECTING DATES
+import Calendar from 'react-calendar';
 
 const DoctorAppointment = () => {
   const { id } = useParams();
@@ -26,7 +27,7 @@ const DoctorAppointment = () => {
   const [appointmentDate, setAppointmentDate] = useState("");
   const [timeSlot, setTimeSlot] = useState("");
   const [err,setErr] = useState("");
-
+  const [value, setValue] = useState(new Date()); //for date picker
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
@@ -185,10 +186,11 @@ const DoctorAppointment = () => {
                 <Form>
                     <Form.Group className="mb-3">
                     <Form.Label>Select Appointment Date:</Form.Label>
+                    {/* <Calendar className="react-calendar" value={value}/> */}
                     <Form.Control
                         type="date"
                         min={`${year}-${month}-${day}`} 
-                        max="2025-04-01"
+                        max="2025-06-01"
                         value={appointmentDate} 
                         onChange={(e) => setAppointmentDate(e.target.value)}
                     />
@@ -197,7 +199,7 @@ const DoctorAppointment = () => {
                         <Form.Select value={timeSlot} onChange={(e) => setTimeSlot(e.target.value)}>
                             <option value="">Select Time Slot</option>
                             {docUser.availableTimeSlots.map((slot, index) => (
-                            <option key={index} value={slot}>{slot}</option>
+                            <option key={index} value={slot} disabled>{slot}</option>
                             ))}
                         </Form.Select>
                     </Form.Group>

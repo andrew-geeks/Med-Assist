@@ -7,6 +7,7 @@ export default function Xray() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [message, setMessage] = useState("");
+  const [error,setError] = useState("");
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -14,8 +15,9 @@ export default function Xray() {
       setSelectedFile(file);
       setPreview(URL.createObjectURL(file));
       setMessage("");
+      setError("");
     } else {
-      setMessage("Only PNG and JPG files are allowed.");
+      setError("Only PNG and JPG files are allowed.");
       setSelectedFile(null);
       setPreview(null);
     }
@@ -23,7 +25,7 @@ export default function Xray() {
 
   const handleUpload = async () => {
     if (!selectedFile) {
-      setMessage("Please select a valid PNG or JPG image.");
+      setError("Please select a valid PNG or JPG image.");
       return;
     }
     
@@ -31,12 +33,13 @@ export default function Xray() {
     formData.append("file", selectedFile);
 
     try {
+      setError("");
       const response = await axios.post("http://127.0.0.1:4000/predxray", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setMessage(response.data.predicted_class);
     } catch (error) {
-      setMessage("Upload failed. Please try again.");
+      setError("Upload a valid chest x-ray image.");
     }
   };
 
@@ -58,6 +61,7 @@ export default function Xray() {
         </Button>
       </Card.Body>
     </Card>
+    <h4 className="message text-danger mt-2">{error}</h4>
     <h4 className="message">{message && <p className="text-danger mt-2">{"Detected Issue: "+message}</p>}</h4>
     </>
     
