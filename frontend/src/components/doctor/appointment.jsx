@@ -9,8 +9,7 @@ import axios from 'axios';
 import Alert from 'react-bootstrap/Alert';
 import logo from '../../media/main.png';
 import Cookies from 'js-cookie';
-//USE REACT DATE PICKER FOR SELECTING DATES
-import Calendar from 'react-calendar';
+
 
 const DoctorAppointment = () => {
   const { id } = useParams();
@@ -27,23 +26,51 @@ const DoctorAppointment = () => {
   const [appointmentDate, setAppointmentDate] = useState("");
   const [timeSlot, setTimeSlot] = useState("");
   const [err,setErr] = useState("");
-  const [value, setValue] = useState(new Date()); //for date picker
+  const [bookedSlots, setBookedSlots] = useState([]);
+
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
   const day = String(currentDate.getDate()).padStart(2, '0');
+
+  // Calculate one month ahead
+  const nextMonthDate = new Date(currentDate);
+  nextMonthDate.setMonth(currentDate.getMonth() + 1);
+
+  const maxYear = nextMonthDate.getFullYear();
+  const maxMonth = String(nextMonthDate.getMonth() + 1).padStart(2, '0');
+  const maxDay = String(nextMonthDate.getDate()).padStart(2, '0');
 
 
   useEffect(()=>{
     const fetchData = async ()=>{
         const response = await axios.get("http://127.0.0.1:4000/docdata",{params:{id:id}}) //fetching doctor-details
         setDocUser(response.data)
-        
-       
     }  
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
+
+
+  const handleDateChange = async (e) => {
+    const selectedDate = e.target.value;
+    setAppointmentDate(selectedDate);
+  
+    try {
+      const response = await axios.get("http://127.0.0.1:4000/bookedslots", {
+        params: {
+          doc_id: id,
+          appointment_date: selectedDate
+        }
+      });
+  
+      const bookedTimes = response.data.map(appointment => appointment.time_slot);
+      setBookedSlots(bookedTimes);
+  
+    } catch (error) {
+      console.error("Error fetching booked slots:", error);
+    }
+  };
 
   function loadScript(src) {
     return new Promise((resolve) => {
@@ -186,22 +213,24 @@ const DoctorAppointment = () => {
                 <Form>
                     <Form.Group className="mb-3">
                     <Form.Label>Select Appointment Date:</Form.Label>
-                    {/* <Calendar className="react-calendar" value={value}/> */}
+                    
                     <Form.Control
-                        type="date"
-                        min={`${year}-${month}-${day}`} 
-                        max="2025-06-01"
-                        value={appointmentDate} 
-                        onChange={(e) => setAppointmentDate(e.target.value)}
+                      type="date"
+                      min={`${year}-${month}-${day}`} 
+                      max={`${maxYear}-${maxMonth}-${maxDay}`}
+                      value={appointmentDate}
+                      onChange={handleDateChange}
                     />
                     </Form.Group>
                     <Form.Group className="mb-3">
-                        <Form.Select value={timeSlot} onChange={(e) => setTimeSlot(e.target.value)}>
-                            <option value="">Select Time Slot</option>
-                            {docUser.availableTimeSlots.map((slot, index) => (
-                            <option key={index} value={slot} disabled>{slot}</option>
-                            ))}
-                        </Form.Select>
+                    <Form.Select value={timeSlot} onChange={(e) => setTimeSlot(e.target.value)}>
+                      <option value="">Select Time Slot</option>
+                      {docUser.availableTimeSlots.map((slot, index) => (
+                        <option key={index} value={slot} disabled={bookedSlots.includes(slot)}>
+                          {slot} {bookedSlots.includes(slot) ? "(Booked)" : ""}
+                        </option>
+                      ))}
+                  </Form.Select>
                     </Form.Group>
                 </Form>
                 <h5 className="mt-3">Fee: <span className="text-primary">₹{docUser.consultationFee}.0</span></h5>

@@ -29,6 +29,7 @@ function Login(){
                 Cookies.set('name',response.data.name, { expires: 2 })
                 Cookies.set('type',response.data.type, { expires: 2 })
                 Cookies.set('id',response.data.id, { expires: 2 })
+                Cookies.set('location',response.data.location, { expires: 2 })
                 //redirecting
                 if(Cookies.get('type')==='patient'){
                     window.location.href = '/dashboard'

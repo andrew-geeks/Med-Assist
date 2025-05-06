@@ -134,7 +134,7 @@ def login():
     if(response):
         # name = response["name"]
         # a_type = response["type"]
-        return jsonify({"message": "successful","email":response["email"],"name":response["name"],"type":response["type"],"id":str(response["_id"])}), 200
+        return jsonify({"message": "successful","email":response["email"],"name":response["name"],"type":response["type"],"id":str(response["_id"]),"location":response["location"]}), 200
     else:
         return jsonify({"message": "incorrect"}), 500
 
@@ -173,6 +173,13 @@ def getdocdata():
         return jsonify(response),200
     else:
         return jsonify({"message":"data not found"}),500
+
+@app.route("/fetchdoctors",methods=["GET"])
+def fetchdoctors():
+    location = request.args.get("location")
+    response = mdb.doctor.find({"location":location},{"_id": 0})
+    return jsonify(list(response)),200
+    
 
 @app.route("/updatedoc",methods=["POST"])
 def updatedocdata():
@@ -214,7 +221,8 @@ def appointment():
         return jsonify({"message":"sucess"}),200
     except:
         return jsonify({"message":"appointments-insertion error"}),500
-    
+
+#for patients
 @app.route("/getappointments",methods=["GET"])
 def getappointment():
     email = request.args.get("email")
@@ -238,6 +246,15 @@ def fetchappointment():
         return jsonify(list(data)),200
     
 
+#cancel appointment
+@app.route("/cancelappointment",methods=["POST"])
+def cancelappointment():
+    data = request.json
+    try:
+        mdb.appointments.delete_one(data)
+        return jsonify({"message":"success"}),200
+    except:
+        return jsonify({"message":"error"}),500
     
 # ----------------
 
@@ -306,8 +323,28 @@ def predict_image():
     else:
         os.remove(file_path)#removing file path
         return jsonify({"error":"Provide a valid Chest X-Ray Image"}), 400
-    
-    
-    
+
+
+@app.route('/bookedslots', methods=['GET'])
+def get_booked_slots():
+    doc_id = request.args.get('doc_id')
+    appointment_date = request.args.get('appointment_date')
+
+    if not doc_id or not appointment_date:
+        return jsonify({"error": "Missing required parameters"}), 400
+
+    try:
+        bookings = mdb.appointments.find({
+            "doc_id": doc_id,
+            "appointment_date": appointment_date
+        })
+        
+        booked_slots = [{"time_slot": booking["time_slot"]} for booking in bookings]
+        return jsonify(booked_slots), 200
+
+    except Exception as e:
+        print(f"Error fetching booked slots: {e}")
+        return jsonify({"error": "Server error"}), 500
+
 
 app.run(port=4000)
