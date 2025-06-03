@@ -236,15 +236,19 @@ def getappointment():
     #     return jsonify({"message":"error"}),500
 
 #for doctors
-@app.route("/fetchappointments",methods=["GET"])
+@app.route("/fetchappointments", methods=["GET"])
 def fetchappointment():
-    id = request.args.get("id")
-    data = mdb.appointments.find({"doc_id":id},{"_id": 0})
-    if(data=={}):
-        return jsonify({"message":"no appointments"}),500
-    else:
-        return jsonify(list(data)),200
-    
+    doc_id = request.args.get("id")
+    appointments = list(mdb.appointments.find({"doc_id": doc_id}))
+
+    if not appointments:
+        return jsonify({"message": "no appointments"}), 404
+
+    # Convert ObjectId to string
+    for appt in appointments:
+        appt["_id"] = str(appt["_id"])
+
+    return jsonify(appointments), 200
 
 #cancel appointment
 @app.route("/cancelappointment",methods=["POST"])
@@ -256,6 +260,35 @@ def cancelappointment():
     except:
         return jsonify({"message":"error"}),500
     
+    
+#update appointment
+@app.route("/updateappointment", methods=["POST"])
+def update_appointment():
+    try:
+        data = request.get_json()
+        appointment_id = data.get("_id")
+        new_date = data.get("appointment_date")
+        new_slot = data.get("time_slot")
+
+        if not (appointment_id and new_date and new_slot):
+            return jsonify({"message": "Missing required fields"}), 400
+
+        result = mdb.appointments.update_one(
+            {"_id": ObjectId(appointment_id)},
+            {"$set": {
+                "appointment_date": new_date,
+                "time_slot": new_slot
+            }}
+        )
+
+        if result.matched_count == 0:
+            return jsonify({"message": "Appointment not found"}), 404
+
+        return jsonify({"message": "Appointment updated successfully"}), 200
+
+    except Exception as e:
+        print("Error updating appointment:", e)
+        return jsonify({"message": "Internal server error"}), 500
 # ----------------
 
 

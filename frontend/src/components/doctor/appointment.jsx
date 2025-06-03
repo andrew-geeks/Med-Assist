@@ -53,24 +53,35 @@ const DoctorAppointment = () => {
 
 
   const handleDateChange = async (e) => {
-    const selectedDate = e.target.value;
-    setAppointmentDate(selectedDate);
-  
-    try {
-      const response = await axios.get("http://127.0.0.1:4000/bookedslots", {
-        params: {
-          doc_id: id,
-          appointment_date: selectedDate
-        }
-      });
-  
-      const bookedTimes = response.data.map(appointment => appointment.time_slot);
-      setBookedSlots(bookedTimes);
-  
-    } catch (error) {
-      console.error("Error fetching booked slots:", error);
-    }
-  };
+  const selectedDate = e.target.value;
+  const dateObj = new Date(selectedDate);
+  const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' }); // eg: "Monday"
+
+  if (!docUser.availableDays.includes(dayName) && docUser.availableDays.length > 0) {
+    setErr(`Appointments are not available on ${dayName}s`);
+    setAppointmentDate("");
+    setBookedSlots([]);
+    return;
+  }
+
+  setErr("");
+  setAppointmentDate(selectedDate);
+
+  try {
+    const response = await axios.get("http://127.0.0.1:4000/bookedslots", {
+      params: {
+        doc_id: id,
+        appointment_date: selectedDate
+      }
+    });
+
+    const bookedTimes = response.data.map(appointment => appointment.time_slot);
+    setBookedSlots(bookedTimes);
+  } catch (error) {
+    console.error("Error fetching booked slots:", error);
+  }
+};
+
 
   function loadScript(src) {
     return new Promise((resolve) => {

@@ -3,7 +3,7 @@ import Cookie from 'js-cookie';
 import '../../styles/dashboard.css';
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Button, Container, Table } from "react-bootstrap";
+import { Button, Container, Table, Modal, Form } from "react-bootstrap";
 
 function DocDashboard() {
     const [appointments, setAppointments] = useState([]);
@@ -11,6 +11,23 @@ function DocDashboard() {
     const [upcomingCount, setUpcomingCount] = useState(0);
     const [consultationEarnings, setConsultationEarnings] = useState(0);
     const [patientsConsulted, setPatientsConsulted] = useState(0);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedAppointment, setSelectedAppointment] = useState(null);
+    const [updatedDate, setUpdatedDate] = useState('');
+    const [updatedTimeSlot, setUpdatedTimeSlot] = useState('');
+
+    const timeSlots = Array.from({ length: 12 }, (_, i) => {
+    const startHour = 9 + i;
+    const endHour = startHour + 1;
+
+    const formatTime = (hour) => {
+        const suffix = hour >= 12 ? "PM" : "AM";
+        const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+        return `${formattedHour}:00 ${suffix}`;
+    };
+
+    return `${formatTime(startHour)} - ${formatTime(endHour)}`;
+});
 
     useEffect(() => {
         const fetchAppointments = async () => {
@@ -22,7 +39,7 @@ function DocDashboard() {
                 const allAppointments = response.data;
                 const currentDate = new Date();
                 const currentYear = currentDate.getFullYear();
-                const currentMonth = currentDate.getMonth(); // 0-indexed
+                const currentMonth = currentDate.getMonth();
 
                 let upcoming = [];
                 let earnings = 0;
@@ -65,14 +82,44 @@ function DocDashboard() {
                 "_id": appointmentId
             });
 
-            // Remove the canceled appointment from UI
             setAppointments(prev => prev.filter(app => app._id !== appointmentId));
             setUpcomingCount(prev => prev - 1);
-
             alert("Appointment canceled successfully!");
         } catch (error) {
             console.error("Error cancelling appointment:", error);
             alert("Failed to cancel appointment!");
+        }
+    };
+
+    const handleUpdateClick = (appointment) => {
+        setSelectedAppointment(appointment);
+        setUpdatedDate(appointment.appointment_date);
+        setUpdatedTimeSlot(appointment.time_slot);
+        setShowModal(true);
+    };
+
+    const handleUpdateSubmit = async () => {
+        try {
+            await axios.post("http://127.0.0.1:4000/updateappointment", {
+                _id: selectedAppointment._id,
+                appointment_date: updatedDate,
+                time_slot: updatedTimeSlot
+            });
+
+            // Refresh local state
+            setAppointments(prev =>
+                prev.map(app =>
+                    app._id === selectedAppointment._id
+                        ? { ...app, appointment_date: updatedDate, time_slot: updatedTimeSlot }
+                        : app
+                )
+            );
+
+            setShowModal(false);
+            alert("Appointment updated successfully!");
+        } catch (error) {
+            console.error("Error updating appointment:", error);
+            alert("Failed to update appointment!");
         }
     };
 
@@ -83,7 +130,6 @@ function DocDashboard() {
                 <h5 className="head">Welcome Dr. {Cookie.get('name')},</h5>
             </div>
 
-            {/* Stats Section */}
             <div className="info-container">
                 <div className="box">
                     <h5>Upcoming Appointments</h5><br/>
@@ -99,7 +145,7 @@ function DocDashboard() {
                 </div>
             </div>
             <br/><br/>
-            {/* Appointment List Section */}
+
             <Container className="mt-4">
                 <h3 className="mb-3">Upcoming Appointments</h3>
 
@@ -128,10 +174,12 @@ function DocDashboard() {
                                     <td>₹{appointment.fee}</td>
                                     <td>{appointment.location_address}</td>
                                     <td>
-                                        <Button variant="warning" size="sm">
+                                        <Button variant="warning" size="sm" className="me-2"
+                                            onClick={() => handleUpdateClick(appointment)}>
                                             Update
-                                        </Button> 
-                                        <Button variant="danger" size="sm" onClick={() => handleCancel(appointment._id)}>
+                                        </Button>
+                                        <Button variant="danger" size="sm"
+                                            onClick={() => handleCancel(appointment._id)}>
                                             Cancel
                                         </Button>
                                     </td>
@@ -141,6 +189,49 @@ function DocDashboard() {
                     </Table>
                 )}
             </Container>
+
+            {/* Update Modal */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Update Appointment</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="formDate">
+                            <Form.Label>Appointment Date</Form.Label>
+                            <Form.Control
+                                type="date"
+                                min={new Date(Date.now() + 86400000).toISOString().split("T")[0]} // sets min date to tomorrow
+                                value={updatedDate}
+                                onChange={(e) => setUpdatedDate(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formTimeSlot" className="mt-3">
+                                <Form.Label>Time Slot</Form.Label>
+                                <Form.Select
+                                    value={updatedTimeSlot}
+                                    onChange={(e) => setUpdatedTimeSlot(e.target.value)}
+                                >
+                                    <option value="">Select a time slot</option>
+                                    {timeSlots.map((slot, idx) => (
+                                        <option key={idx} value={slot}>
+                                            {slot}
+                                        </option>
+                                    ))}
+                                </Form.Select>
+                            </Form.Group>
+
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={handleUpdateSubmit}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 }

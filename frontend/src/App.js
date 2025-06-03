@@ -16,7 +16,8 @@ import Summarize from './components/summarize';
 import DoctorAppointment from './components/doctor/appointment';
 import Confirmed from './components/doctor/confirmation';
 import EditProfile from './components/doctor/editProfile';
-import YourAppointment from './components/doctor/yourappointment';
+//import YourAppointment from './components/doctor/yourappointment';
+import UserProfile from './components/userProfile';
 
 
 //private routing -- patient
@@ -75,13 +76,14 @@ function App() {
               <Route path='/login' element={<PrivateAuthedRoute><Login/></PrivateAuthedRoute>}/>
               <Route path='/signup' element={<PrivateAuthedRoute><Signup/></PrivateAuthedRoute>}/>
               <Route path='/dsignup' element={<PrivateAuthedRoute><DSignup/></PrivateAuthedRoute>}/>
+              <Route path='/userprofile' element={<PrivatePatientRoute><UserProfile/></PrivatePatientRoute>}/>
               <Route path='/forgotpassword' element={<PrivateAuthedRoute><ForgotPass/></PrivateAuthedRoute>}/>
               <Route path='/dashboard' element={<PrivatePatientRoute><Dashboard/></PrivatePatientRoute>}/>
               <Route path='/appointment/:id' element={<PrivatePatientRoute><DoctorAppointment/></PrivatePatientRoute>}/>
               <Route path='/confirm' element={<PrivatePatientRoute><Confirmed/></PrivatePatientRoute>}/>
               <Route path='/ddashboard' element={<PrivateDoctorRoute><DocDashboard/></PrivateDoctorRoute>}/>
               <Route path='/editprofile' element={<PrivateDoctorRoute><EditProfile/></PrivateDoctorRoute>}/>
-              <Route path='/yourappointment' element={<PrivateDoctorRoute><YourAppointment/></PrivateDoctorRoute>}/>
+              {/* <Route path='/yourappointment' element={<PrivateDoctorRoute><YourAppointment/></PrivateDoctorRoute>}/> */}
               <Route path="/chat" element={<Chat/>}/>
               <Route path="/xray" element={<Xray/>}/>
               <Route path="/summarize" element={<Summarize/>}/>
