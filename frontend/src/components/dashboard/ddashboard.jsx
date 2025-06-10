@@ -104,7 +104,10 @@ function DocDashboard() {
                 _id: selectedAppointment._id,
                 appointment_date: updatedDate,
                 time_slot: updatedTimeSlot
-            });
+            })
+            .then(response => {
+                console.log(response.data);
+        })   
 
             // Refresh local state
             setAppointments(prev =>

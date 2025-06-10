@@ -139,6 +139,23 @@ def login():
         return jsonify({"message": "incorrect"}), 500
 
 
+@app.route("/deleteaccount",methods=["DELETE"])
+def delete_account():
+    data = request.json
+    email = data["email"]
+    response = mdb.users.find_one({"email":email})
+    if(response):
+        mdb.users.delete_one({"email":email})
+        mdb.doctor.delete_one({"d_id":str(response["_id"])})
+        mdb.appointments.delete_many({"patient_mail":email})
+        mdb.appointments.delete_many({"doc_id":str(response["_id"])})
+        mdb.payments.delete_many({"patient_mail":email})
+        return jsonify({"message": "account deleted"}), 200
+    else:
+        return jsonify({"message": "account not found"}), 500
+
+
+
 @app.route("/forgotpassword",methods=["POST"]) 
 def forgot_password():
     data = request.json
@@ -273,6 +290,14 @@ def update_appointment():
         if not (appointment_id and new_date and new_slot):
             return jsonify({"message": "Missing required fields"}), 400
 
+        # Fetch the appointment document to get the email
+        appointment = mdb.appointments.find_one({"_id": ObjectId(appointment_id)})
+        if not appointment:
+            return jsonify({"message": "Appointment not found"}), 404
+
+        email = appointment["patient_mail"]
+        
+        # Update the appointment with new date and time slot
         result = mdb.appointments.update_one(
             {"_id": ObjectId(appointment_id)},
             {"$set": {
@@ -280,11 +305,11 @@ def update_appointment():
                 "time_slot": new_slot
             }}
         )
-
-        if result.matched_count == 0:
-            return jsonify({"message": "Appointment not found"}), 404
-
-        return jsonify({"message": "Appointment updated successfully"}), 200
+        mail_func.updateappointment(email, new_date, new_slot)  # Send email notification
+        return jsonify({
+            "message": "Appointment updated successfully",
+            "email": email
+        }), 200
 
     except Exception as e:
         print("Error updating appointment:", e)

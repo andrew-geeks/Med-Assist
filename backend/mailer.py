@@ -37,4 +37,13 @@ class Mailer:
   			"to": [send_mail],
   			"subject": "Appointment Confirmation",
   			"text": "Your Appointment has been confirmed. Below are the details.\n\n\n"+"Appointment Date: "+appt_date+"\nTime Slot: "+time_slot+"\nDoctor Name: "+doc_name+"\nDoctor Phone:"+doc_phno+"\nAddress: "+address+"\nConsultation Charges: "+fee+"\n\n\nRegards\nTeam MedAssist"})
+         
+    def updateappointment(self,send_mail,appt_date,time_slot):
+    		 return requests.post(
+  		self.domain_url,
+  		auth=("api", self.api),
+  		data={"from": "MedAssist Crew <medassist.crew@gmail.com>",
+  			"to": [send_mail],
+  			"subject": "Appointment Update!",
+  			"text": "Your Appointment has been updated by the doctor. Below are the details.\n\n\n"+"Appointment Date: "+appt_date+"\nTime Slot: "+time_slot+"\n\n\nRegards\nTeam MedAssist"})
 
