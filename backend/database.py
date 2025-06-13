@@ -17,6 +17,7 @@ class MongoDatabase:
                     "location": {"bsonType": "string"},
                     "type": {"bsonType": "string"},
                     "password": {"bsonType": "string"},
+                    "specialization": {"bsonType": "string"},
                 }
                 
             }

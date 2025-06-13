@@ -14,6 +14,7 @@ const EditProfile = () => {
     consultationFee: "",
     availableDays: [],
     availableTimeSlots: [],
+    specialization: "",
   });
   const [phoneError, setPhoneError] = useState("");
 
@@ -30,10 +31,13 @@ const EditProfile = () => {
         hospitalName:docResponse.data.hospitalName,
         hospitalPlace:docResponse.data.hospitalPlace,
         consultationFee:docResponse.data.consultationFee,
-        phoneNumber:docResponse.data.phoneNumber
+        phoneNumber:docResponse.data.phoneNumber,
+        specialization:docResponse.data.specialization,
+        availableDays:docResponse.data.availableDays || [],
+        availableTimeSlots:docResponse.data.availableTimeSlots || [],
       }
       setFormData(prevdata=>({...prevdata,...docData}))
-      //console.log(formData)
+      
     };
 
     fetchData();
@@ -156,6 +160,11 @@ const EditProfile = () => {
           <Form.Control type="text" name="hospitalPlace" value={formData.hospitalPlace} onChange={handleChange} placeholder="Enter hospital place" required/>
           <br/>
           <em><Info/>The mentioned hospital and its place will be were the doctor is available for consultation.</em>
+        </Form.Group>
+        <br/>
+        <Form.Group className="mb-3">
+          <Form.Label>Specialization</Form.Label>
+          <Form.Control type="text" name="specialization" value={formData.specialization} onChange={handleChange} disabled={true} required/>
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Consultation Fee (in Rupees)</Form.Label>

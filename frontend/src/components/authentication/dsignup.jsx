@@ -112,9 +112,11 @@ function DSignup(){
                 <Col>
                 <Form.Select aria-label="Default select example" name="specialization"  onChange={handleChange} value={formData.specialization}>
                     <option value="">Select Specialization</option>
-                    <option value="Pulmonology">Pulmonology</option>
+                    <option value="Pulmonologist">Pulmonologist</option>
                     <option value="Thoraic Surgeon">Thoraic Surgeon</option>
                     <option value="General">General</option>
+                    <option value="Cardiologist">Cardiologist </option>
+                    <option value="Oncologist">Oncologist  </option>
                 </Form.Select>
                 </Col>
             </Row>

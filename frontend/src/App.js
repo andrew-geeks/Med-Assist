@@ -18,6 +18,7 @@ import Confirmed from './components/doctor/confirmation';
 import EditProfile from './components/doctor/editProfile';
 //import YourAppointment from './components/doctor/yourappointment';
 import UserProfile from './components/userProfile';
+import ResetPassword from './components/authentication/reset';
 
 
 //private routing -- patient
@@ -78,6 +79,7 @@ function App() {
               <Route path='/dsignup' element={<PrivateAuthedRoute><DSignup/></PrivateAuthedRoute>}/>
               <Route path='/userprofile' element={<PrivatePatientRoute><UserProfile/></PrivatePatientRoute>}/>
               <Route path='/forgotpassword' element={<PrivateAuthedRoute><ForgotPass/></PrivateAuthedRoute>}/>
+              <Route path='/resetpassword' element={<PrivateAuthedRoute><ResetPassword/></PrivateAuthedRoute>}/>
               <Route path='/dashboard' element={<PrivatePatientRoute><Dashboard/></PrivatePatientRoute>}/>
               <Route path='/appointment/:id' element={<PrivatePatientRoute><DoctorAppointment/></PrivatePatientRoute>}/>
               <Route path='/confirm' element={<PrivatePatientRoute><Confirmed/></PrivatePatientRoute>}/>

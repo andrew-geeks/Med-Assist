@@ -5,12 +5,32 @@ import Cookies from "js-cookie";
 import NavBar from "../components/navbar/navbar";
 import '../styles/xray.css';
 
+const diseaseSpecializationMap = {
+  Cardiomegaly: ["Cardiologist"],
+  Emphysema: ["Pulmonologist"],
+  Effusion: ["Pulmonologist", "Thoracic Surgeon"],
+  Hernia: ["Thoracic Surgeon"],
+  Infiltration: ["Pulmonologist", "Oncologist"],
+  Mass: ["Pulmonologist", "Oncologist", "Thoracic Surgeon"],
+  Nodule: ["Pulmonologist", "Oncologist", "Thoracic Surgeon"],
+  Atelectasis: ["Pulmonologist"],
+  Pneumothorax: ["Pulmonologist", "Thoracic Surgeon"],
+  "Pleural Thickening": ["Pulmonologist", "Thoracic Surgeon"],
+  Pneumonia: ["Pulmonologist", "General Physician"],
+  Fibrosis: ["Pulmonologist", "Oncologist"],
+  Edema: ["Cardiologist", "Pulmonologist"],
+  Consolidation: ["Pulmonologist", "Oncologist"],
+};
+
 export default function Xray() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [doctors, setDoctors] = useState([]);
+  //const [allDoctors, setAllDoctors] = useState([]);
+
+ 
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -19,7 +39,8 @@ export default function Xray() {
       setPreview(URL.createObjectURL(file));
       setMessage("");
       setError("");
-      setDoctors([]); // clear previous doctors
+      setDoctors([]);
+      //setAllDoctors([]);
     } else {
       setError("Only PNG and JPG files are allowed.");
       setSelectedFile(null);
@@ -51,16 +72,23 @@ export default function Xray() {
 
       if (userType === "patient" && userLocation) {
         const doctorResponse = await axios.get(`http://127.0.0.1:4000/fetchdoctors?location=${userLocation}`);
-        
-        setDoctors(doctorResponse.data || []);
+        //setAllDoctors(doctorResponse.data || []);
+        //console.log(doctorResponse.data);
+        const requiredSpecializations = diseaseSpecializationMap[predictedClass] || [];
+        //console.log(requiredSpecializations);
+        const matchedDoctors = doctorResponse.data.filter((doc) =>
+        requiredSpecializations.includes(doc.specialization)
+    );
+    setDoctors(matchedDoctors);
+    //console.log(matchedDoctors)
       }
-
     } catch (error) {
       console.error(error);
       setError("Upload a valid chest x-ray image.");
       setMessage("");
     }
   };
+
 
   return (
     <>
@@ -84,10 +112,7 @@ export default function Xray() {
       </Card>
 
       {error && <h4 className="message text-danger mt-2">{error}</h4>}
-
-      {message && (
-        <h4 className="message text-danger mt-3">Detected Issue: {message}</h4>
-      )}
+      {message && <h4 className="message text-danger mt-3">Detected Issue: {message}</h4>}
 
       {doctors.length > 0 && (
         <div className="w-50 mx-auto mt-4">
@@ -98,12 +123,24 @@ export default function Xray() {
                 <strong>👤 Dr. {doctor.doctorName}</strong><br />
                 <strong>Specialization:</strong> {doctor.specialization}<br />
                 <strong>Location:</strong> {doctor.hospitalName}, {doctor.hospitalPlace}<br />
-                <Button variant="primary" className="mt-2" onClick={() => window.location.href = `/appointment/${doctor.d_id}`}>
+                <Button
+                  variant="primary"
+                  className="mt-2"
+                  onClick={() => window.location.href = `/appointment/${doctor.d_id}`}
+                >
                   Book Appointment
                 </Button><br />
+                <br/>
               </li>
+              
             ))}
           </ul>
+        </div>
+      )}
+
+      {message && doctors.length === 0 && (
+        <div className="text-center text-muted mt-4">
+          <p>No matching doctors found for the detected condition in your area.</p>
         </div>
       )}
     </>

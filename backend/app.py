@@ -164,10 +164,23 @@ def forgot_password():
     if(response):
         token = generate_token() #getting unique token
         mail_func.forgotpass(data["email"],str(token)) #sending reset password link
-        mdb.users.update_one({"email":data["email"]},{"rtoken":token})
+        mdb.users.update_one({"email": data["email"]}, {"$set": {"rtoken": token}})
         return jsonify({"message": "mail sent"}), 200
     else:
         return jsonify({"message":"mail not found"}),500
+
+@app.route("/resetpassword", methods=["POST"])
+def reset_password():
+    data = request.json
+    token = data.get("token")
+    password = bcrypt.hashpw(str(data.get("password")).encode('utf-8'), salt)#password hashing
+    new_password = password.decode("utf-8")
+    user = mdb.users.find_one({"rtoken": token})
+    if user:
+        mdb.users.update_one({"rtoken": token}, {"$set": {"password": new_password}, "$unset": {"rtoken": ""}})
+        return jsonify({"message": "Password reset successfully"}), 200
+    else:
+        return jsonify({"message": "Invalid or expired token"}), 400
 
 
 @app.route("/userdata",methods=["GET"])
@@ -325,40 +338,77 @@ def chat():
 
 
 
-@app.route("/summarize",methods=["POST"])
+@app.route("/summarize", methods=["POST"])
 def summarize():
     if 'pdf' not in request.files:
         return jsonify({'message': 'No file part'}), 400
 
     file = request.files['pdf']
-
     if file.filename == '':
         return jsonify({'message': 'No selected file'}), 400    
-    try:    
-        
+
+    try:
         reader = PyPDF2.PdfReader(file)
         text = ''
         for page in reader.pages:
-            text += page.extract_text()
-    except:
-         return jsonify({'message': 'File Parsing error'}), 400  
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text
+    except Exception as e:
+        print(f"PDF parsing error: {e}")
+        return jsonify({'message': 'File Parsing error'}), 400  
 
-    payload = {
-        "model": "llama3.2",  
-        "prompt": text+" \nSummarize this report briefly. Include all details. Do not provide any consultation.",
-        "stream": False
-    }
-     
+    # Step 1: Ask LLM if it's a medical report
+    classification_prompt = (
+        text[:2000] +  # Truncate to avoid overload
+        "\n\nIs the above document a medical report? Reply only 'Yes' or 'No'."
+    )
+
     try:
-        response = requests.post("http://localhost:11434/api/generate", json=payload)
-        if response.status_code == 200:
-            return response.json(),200
-        else:
-            print(f"Error: {response.status_code}, {response.text}")
-        return jsonify({'message': 'LLM error'}), 400
+        classification_response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={
+                "model": "llama3.2",
+                "prompt": classification_prompt,
+                "stream": False
+            }
+        )
+        if classification_response.status_code != 200:
+            print(f"Classification error: {classification_response.status_code}, {classification_response.text}")
+            return jsonify({'message': 'LLM error'}), 400
+
+        classification_result = classification_response.json().get("response", "").strip().lower()
+        if "yes" not in classification_result:
+            return jsonify({'message': 'Please upload only medical reports.'}), 400
+
     except requests.exceptions.RequestException as e:
-        print(f"Request failed: {e}")
+        print(f"LLM classification request failed: {e}")
         return jsonify({'message': 'LLM error'}), 400
+
+    # Step 2: Send for summarization
+    summarization_prompt = (
+        text + "\n\nSummarize this report briefly. Include all details. Do not provide any consultation."
+    )
+
+    try:
+        summary_response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={
+                "model": "llama3.2",
+                "prompt": summarization_prompt,
+                "stream": False
+            }
+        )
+        if summary_response.status_code == 200:
+            return summary_response.json(), 200
+        else:
+            print(f"Summary error: {summary_response.status_code}, {summary_response.text}")
+            return jsonify({'message': 'LLM error'}), 400
+
+    except requests.exceptions.RequestException as e:
+        print(f"LLM summary request failed: {e}")
+        return jsonify({'message': 'LLM error'}), 400
+
 
     
 #predict disease from chest x-ray    
