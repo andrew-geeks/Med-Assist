@@ -44,10 +44,12 @@ function NavBar(){
                 {Cookies.get("email")===null?<NavDropdown.Item href="/login">LogIn</NavDropdown.Item>:null}
                 {Cookies.get("email")===null?<NavDropdown.Item href="/signup">SignUp</NavDropdown.Item>:null}
                 {Cookies.get("email")?<NavDropdown.Item href="/userprofile">User Profile</NavDropdown.Item>:null}
+                {Cookies.get("type")==="patient"?<NavDropdown.Item href="/appointmenthistory">Appointment History</NavDropdown.Item>:null}
                 {Cookies.get("email")?<NavDropdown.Item onClick={LogOut}>Logout</NavDropdown.Item>:null}
                 
                 {Cookies.get("email")===null?<NavDropdown.Item href="/dsignup">For Doctors</NavDropdown.Item>:null}
                 {Cookies.get("type")==="doctor"?<NavDropdown.Item href="/editProfile">Edit Profile</NavDropdown.Item>:null}
+                
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.4">
                   About

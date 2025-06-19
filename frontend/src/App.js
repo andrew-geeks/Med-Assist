@@ -19,6 +19,7 @@ import EditProfile from './components/doctor/editProfile';
 //import YourAppointment from './components/doctor/yourappointment';
 import UserProfile from './components/userProfile';
 import ResetPassword from './components/authentication/reset';
+import AppointmentHistory from './components/doctor/appointmenthistory';
 
 
 //private routing -- patient
@@ -83,6 +84,7 @@ function App() {
               <Route path='/dashboard' element={<PrivatePatientRoute><Dashboard/></PrivatePatientRoute>}/>
               <Route path='/appointment/:id' element={<PrivatePatientRoute><DoctorAppointment/></PrivatePatientRoute>}/>
               <Route path='/confirm' element={<PrivatePatientRoute><Confirmed/></PrivatePatientRoute>}/>
+              <Route path='/appointmenthistory' element={<PrivatePatientRoute><AppointmentHistory/></PrivatePatientRoute>}/>
               <Route path='/ddashboard' element={<PrivateDoctorRoute><DocDashboard/></PrivateDoctorRoute>}/>
               <Route path='/editprofile' element={<PrivateDoctorRoute><EditProfile/></PrivateDoctorRoute>}/>
               {/* <Route path='/yourappointment' element={<PrivateDoctorRoute><YourAppointment/></PrivateDoctorRoute>}/> */}

@@ -114,7 +114,7 @@ function DSignup(){
                     <option value="">Select Specialization</option>
                     <option value="Pulmonologist">Pulmonologist</option>
                     <option value="Thoraic Surgeon">Thoraic Surgeon</option>
-                    <option value="General">General</option>
+                    <option value="General Physician">General Physician</option>
                     <option value="Cardiologist">Cardiologist </option>
                     <option value="Oncologist">Oncologist  </option>
                 </Form.Select>

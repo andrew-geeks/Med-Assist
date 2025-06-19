@@ -265,6 +265,9 @@ def getappointment():
     # except:
     #     return jsonify({"message":"error"}),500
 
+
+
+
 #for doctors
 @app.route("/fetchappointments", methods=["GET"])
 def fetchappointment():
